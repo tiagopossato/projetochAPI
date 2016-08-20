@@ -25,7 +25,7 @@ function getCidades(req, res) {
         }
 
         // SQL Query > Select Data
-        var query = client.query("SELECT * FROM cidades ORDER BY id ASC;");
+        var query = client.query("SELECT id, nome,uf FROM cidades WHERE isativo = TRUE ORDER BY id ASC;");
 
         // Stream results back one row at a time
         query.on('row', function(row) {
