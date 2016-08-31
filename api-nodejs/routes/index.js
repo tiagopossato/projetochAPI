@@ -5,15 +5,6 @@ const https = require('https');
 
 var router = express.Router();
 var verifier = require('google-id-token-verifier');
-var GoogleAuth = require('google-auth-library');
-
-
-
-var auth = new GoogleAuth();
-
-var oauth2Client = new auth.OAuth2();
-
-var request = require('ajax-request');
 
 router.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
