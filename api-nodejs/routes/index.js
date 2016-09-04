@@ -4,7 +4,6 @@ var usuarios = require('../models/usuarios');
 const https = require('https');
 
 var router = express.Router();
-var verifier = require('google-id-token-verifier');
 
 router.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -31,10 +30,11 @@ function validaToken(req, res, next) {
 
         https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (res) => {
             console.log('statusCode:', res.statusCode);
-            //console.log('headers:', res.headers);
+            console.log('headers:', res.headers);
 
             res.on('data', (d) => {
                 process.stdout.write(d);
+                next();
             });
 
         }).on('error', (e) => {
@@ -45,7 +45,7 @@ function validaToken(req, res, next) {
     catch (err) {
         console.log("Erro geral:" + err);
     }
-    next();
+
 }
 
 
