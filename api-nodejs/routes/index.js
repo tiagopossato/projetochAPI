@@ -11,14 +11,14 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/api/v1/cidades', validaToken, cidades.get);
-router.get('/api/v1/cidades/:id', validaToken, cidades.getById);
-router.post('/api/v1/cidades', validaToken, cidades.post);
-router.put('/api/v1/cidades/:id', validaToken, cidades.put);
-router.delete('/api/v1/cidades/:id', validaToken, cidades.delete);
+router.get('/v1/cidades', validaToken, cidades.get);
+router.get('/v1/cidades/:id', validaToken, cidades.getById);
+router.post('/v1/cidades', validaToken, cidades.post);
+router.put('/v1/cidades/:id', validaToken, cidades.put);
+router.delete('/v1/cidades/:id', validaToken, cidades.delete);
 
 /* USUARIOS*/
-router.post('/api/v1/usuarios', validaToken, usuarios.post);
+router.post('/v1/usuarios', validaToken, usuarios.post);
 
 function validaToken(req, res, next) {
     try {
