@@ -15,12 +15,18 @@ module.exports = {
 };
 
 function getCidades(req, res) {
-    
+
     connection.connect(function(err) {
         //caso deu erro
         if (err) {
             console.log('Error connecting to Db');
             console.log(err);
+            //encerra a conexão
+            connection.end(function(err) {
+                if (err) {
+                    console.log('Erro ao fechar a conexão');
+                }
+            });
             return res.status(500).json({
                 success: false,
                 data: err
@@ -29,6 +35,14 @@ function getCidades(req, res) {
         //caso conectou
         connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidades ORDER BY CID_NOME ASC;',
             function(err, rows, fields) {
+                //encerra a conexão
+                connection.end(function(err) {
+                    if (err) {
+                        console.log('Erro ao fechar a conexão');
+                    }
+                });
+                
+                //verifica os resultados
                 if (!err) {
                     return res.json(rows);
                 }
@@ -41,21 +55,14 @@ function getCidades(req, res) {
             });
     });
 
-    //encerra a conexão
-    connection.end(function(err) {
-        // The connection is terminated gracefully
-        // Ensures all previously enqueued queries are still
-        // before sending a COM_QUIT packet to the MySQL server.
-        if (err) {
-            console.log('Erro ao fechar a conexão');
-        }
-    });
-
 }
 
 function getCidadeById(req, res) {}
+
 function postCidade(req, res) {}
+
 function putCidade(req, res) {}
+
 function deleteCidade(req, res) {}
 /*
 
