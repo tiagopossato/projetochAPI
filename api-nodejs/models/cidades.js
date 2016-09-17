@@ -8,10 +8,10 @@ var connection = mysql.createConnection({
 
 module.exports = {
     get: getCidades,
-    //getById: getCidadeById,
-    //post: postCidade,
-    //put: putCidade,
-    //delete: deleteCidade
+    getById: getCidadeById,
+    post: postCidade,
+    put: putCidade,
+    delete: deleteCidade
 };
 
 function getCidades(req, res) {
@@ -53,6 +53,10 @@ function getCidades(req, res) {
 
 }
 
+function getCidadeById(req, res) {}
+function postCidade(req, res) {}
+function putCidade(req, res) {}
+function deleteCidade(req, res) {}
 /*
 
 function getCidadeById(req, res) {
