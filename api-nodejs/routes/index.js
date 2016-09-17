@@ -21,6 +21,7 @@ router.delete('/v1/cidades/:id', validaToken, cidades.delete);
 router.post('/v1/usuarios', validaToken, usuarios.post);
 
 function validaToken(req, res, next) {
+	next();
     try {
         var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
 

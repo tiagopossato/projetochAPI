@@ -1,5 +1,5 @@
-var pg = require('pg');
-var connectionString = 'postgres://chucrute:chucrute@localhost/chucrute';
+var mysql = require('mysql');
+var connectionString = 'postgres://chucrute:chucrute@localhost/HORTAPP';
 
 module.exports = {
     get: getCidades,
@@ -25,7 +25,7 @@ function getCidades(req, res) {
         }
 
         // SQL Query > Select Data
-        var query = client.query("SELECT id, nome,uf FROM cidades WHERE isativo = TRUE ORDER BY id ASC;");
+        var query = client.query("SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidades ORDER BY CID_NOME ASC;");
 
         // Stream results back one row at a time
         query.on('row', function(row) {
