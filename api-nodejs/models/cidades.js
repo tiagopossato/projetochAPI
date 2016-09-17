@@ -1,45 +1,59 @@
 var mysql = require('mysql');
-var connectionString = 'postgres://chucrute:chucrute@localhost/HORTAPP';
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'chucrute',
+    password: 'chucrute',
+    database: 'HORTAPP'
+});
 
 module.exports = {
     get: getCidades,
-    getById: getCidadeById,
-    post: postCidade,
-    put: putCidade,
-    delete: deleteCidade
+    //getById: getCidadeById,
+    //post: postCidade,
+    //put: putCidade,
+    //delete: deleteCidade
 };
 
 function getCidades(req, res) {
-    var results = [];
-
-    // Get a Postgres client from the connection pool
-    pg.connect(connectionString, function(err, client, done) {
-        // Handle connection errors
+    
+    connection.connect(function(err) {
+        //caso deu erro
         if (err) {
-            done();
+            console.log('Error connecting to Db');
             console.log(err);
             return res.status(500).json({
                 success: false,
                 data: err
             });
         }
-
-        // SQL Query > Select Data
-        var query = client.query("SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidades ORDER BY CID_NOME ASC;");
-
-        // Stream results back one row at a time
-        query.on('row', function(row) {
-            results.push(row);
-        });
-
-        // After all data is returned, close connection and return results
-        query.on('end', function() {
-            done();
-            return res.json(results);
-        });
-
+        //caso conectou
+        connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidades ORDER BY CID_NOME ASC;',
+            function(err, rows, fields) {
+                if (!err) {
+                    return res.json(rows);
+                }
+                else {
+                    return res.status(500).json({
+                        success: false,
+                        data: 'Error while performing Query.'
+                    });
+                }
+            });
     });
+
+    //encerra a conexão
+    connection.end(function(err) {
+        // The connection is terminated gracefully
+        // Ensures all previously enqueued queries are still
+        // before sending a COM_QUIT packet to the MySQL server.
+        if (err) {
+            console.log('Erro ao fechar a conexão');
+        }
+    });
+
 }
+
+/*
 
 function getCidadeById(req, res) {
     var results = [];
@@ -198,3 +212,6 @@ function deleteCidade(req, res) {
     });
 
 }
+
+
+*/
