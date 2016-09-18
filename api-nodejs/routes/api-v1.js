@@ -33,7 +33,11 @@ function validaToken(req, res, next) {
             resposta.on('data', (d) => {
                 process.stdout.write(d);
                 if(res.statusCode==200){
-                    next();
+                    //next();
+                    return res.status(resposta.statusCode).json({
+                    success: true,
+                    data: {'ok':"ok"}
+                });
                 }
                 else{
                     return res.status(resposta.statusCode).json({
