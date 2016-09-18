@@ -1,6 +1,5 @@
 var express = require('express');
 var cidades = require('../models/cidades');
-var usuarios = require('../models/usuarios');
 const https = require('https');
 
 var router = express.Router();
@@ -11,14 +10,12 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/v1/cidades', validaToken, cidades.get);
-router.get('/v1/cidades/:id', validaToken, cidades.getById);
-router.post('/v1/cidades', validaToken, cidades.post);
-router.put('/v1/cidades/:id', validaToken, cidades.put);
-router.delete('/v1/cidades/:id', validaToken, cidades.delete);
-
-/* USUARIOS*/
-router.post('/v1/usuarios', validaToken, usuarios.post);
+/*CIDADES*/
+router.get('/cidades', validaToken, cidades.get);
+router.get('/cidades/:id', validaToken, cidades.getById);
+router.post('/cidades', validaToken, cidades.post);
+router.put('/cidades/:id', validaToken, cidades.put);
+router.delete('/cidades/:id', validaToken, cidades.delete);
 
 function validaToken(req, res, next) {
 	next();
