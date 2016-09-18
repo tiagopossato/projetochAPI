@@ -39,11 +39,13 @@ function getCidades(req, res) {
         })
         .on('end', function() {
             // all rows have been received
+            /*
             connection.end(function(err) {
                 if (err) {
                     console.log('Erro ao fechar a conexão');
                 }
             });
+            */
             return res.json(results);
         });
 }
