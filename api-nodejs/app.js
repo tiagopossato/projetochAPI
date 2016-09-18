@@ -1,8 +1,11 @@
 var express = require('express');
-
+var bodyParser = require('body-parser');
 var routes = require('./routes/api-v1');
 
 var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/v1', routes);
 

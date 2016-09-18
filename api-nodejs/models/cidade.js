@@ -1,7 +1,7 @@
 var banco = require('knex')({
     client: 'mysql',
     connection: {
-        host: '127.0.0.1',
+        host: '104.236.59.135',
         user: 'chucrute-testes',
         password: 'chucrute-testes',
         database: 'TESTES-HORTAPP',
@@ -16,7 +16,7 @@ module.exports = {
 function getCidades(req, res) {
     banco
             .select('*')
-            .from('cidade')
+            .from('CIDADE')
             .on('query-response', function (response, obj, builder) {                
             })
             .then(function (response) {
@@ -39,7 +39,7 @@ function getCidadeById(req, res) {
     var id = req.params.id;
     banco
             .select('*')
-            .from('cidade')
+            .from('CIDADE')
             .where({CID_CODIGO: id})    
             .on('query-response', function (response, obj, builder) {                
             })

@@ -1,5 +1,6 @@
 var express = require('express');
-var cidades = require('../models/cidades');
+var cidades = require('../models/cidade');
+var enderecos = require('../models/endereco');
 const https = require('https');
 
 var router = express.Router();
@@ -18,7 +19,16 @@ router.post('/cidades', validaToken, cidades.post);
 router.put('/cidades/:id', validaToken, cidades.put);
 router.delete('/cidades/:id', validaToken, cidades.delete);
 */
+
+/*ENDERECOS*/
+
+router.get('/enderecos', validaToken, enderecos.get);
+router.get('/enderecos/:id', validaToken, enderecos.getById);
+router.post('/enderecos', validaToken, enderecos.post);
+
 function validaToken(req, res, next) {
+    next();
+    return;
     try {
         var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
 
