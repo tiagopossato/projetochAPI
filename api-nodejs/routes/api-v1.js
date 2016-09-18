@@ -19,7 +19,6 @@ router.put('/cidades/:id', validaToken, cidades.put);
 router.delete('/cidades/:id', validaToken, cidades.delete);
 */
 function validaToken(req, res, next) {
-	next();
     try {
         var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
 
@@ -44,7 +43,6 @@ function validaToken(req, res, next) {
     catch (err) {
         console.log("Erro geral:" + err);
     }
-
 }
 
 
