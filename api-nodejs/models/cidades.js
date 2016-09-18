@@ -22,7 +22,7 @@ function getCidades(req, res) {
             .then(function (response) {
                 // Same response as the emitted event
                return res.status(200).json({
-                    success: false,
+                    success: true,
                     data: response
                 });
             })
@@ -46,7 +46,7 @@ function getCidadeById(req, res) {
             .then(function (response) {
                 // Same response as the emitted event
                return res.status(200).json({
-                    success: false,
+                    success: true,
                     data: response
                 });
             })
