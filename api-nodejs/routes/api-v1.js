@@ -35,6 +35,12 @@ function validaToken(req, res, next) {
                 if(res.statusCode==200){
                     next();
                 }
+                else{
+                    return res.status(res.statusCode).json({
+                    success: false,
+                    data: d
+                });
+                }
             });
 
         }).on('error', (e) => {
