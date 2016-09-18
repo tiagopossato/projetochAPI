@@ -13,10 +13,11 @@ router.use(function(req, res, next) {
 /*CIDADES*/
 router.get('/cidades', validaToken, cidades.get);
 router.get('/cidades/:id', validaToken, cidades.getById);
+/*
 router.post('/cidades', validaToken, cidades.post);
 router.put('/cidades/:id', validaToken, cidades.put);
 router.delete('/cidades/:id', validaToken, cidades.delete);
-
+*/
 function validaToken(req, res, next) {
 	next();
     try {

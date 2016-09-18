@@ -1,95 +1,59 @@
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-    host: '104.236.59.135',
-    user: 'chucrute-testes',
-    password: 'chucrute-testes',
-    database: 'TESTES-HORTAPP'
+var banco = require('knex')({
+    client: 'mysql',
+    connection: {
+        host: '104.236.59.135',
+        user: 'chucrute-testes',
+        password: 'chucrute-testes',
+        database: 'TESTES-HORTAPP',
+        charset: 'utf8'
+    }
 });
-
 module.exports = {
     get: getCidades,
-    getById: getCidadeById,
-    post: postCidade,
-    put: putCidade,
-    delete: deleteCidade
+    getById: getCidadeById
 };
 
 function getCidades(req, res) {
-    var results = [];
-    // https://github.com/mysqljs/mysql#streaming-query-rows
-    connection.connect(function(err) {
-        //caso deu erro
-        if (err) {
-            console.log('Error connecting to Db');
-            console.log(err);
-            return;
-        }
-        try {
-            var query = connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidade ORDER BY CID_NOME ASC;');
-            query
-                .on('error', function(err) {
-                    // Handle error, an 'end' event will be emitted after this as well
-                    console.log("On query error: " + err);
-                })
-                .on('result', function(row) {
-                    // Pausing the connnection is useful if your processing involves I/O
-                    //connection.pause();
-                    results.push(row);
-                    //connection.resume();
-
-                })
-                .on('end', function() {
-                    // all rows have been received
-                    return res.status(200).json(results);
+    banco
+            .select('*')
+            .from('cidade')
+            .on('query-response', function (response, obj, builder) {                
+            })
+            .then(function (response) {
+                // Same response as the emitted event
+               return res.status(200).json({
+                    success: false,
+                    data: response
                 });
-        }
-        catch (e) {
-            console.log("Erro: " + e);
-            return;
-        }
-    });
+            })
+            .catch(function (error) {
+                return res.status(500).json({
+                    success: false,
+                    data: error
+                });
+            });
 }
 
 function getCidadeById(req, res) {
-    var results = [];
     // Grab data from the URL parameters
     var id = req.params.id;
-    connection.connect(function(err) {
-        //caso deu erro
-        if (err) {
-            console.log('Error connecting to Db');
-            console.log(err);
-            return;
-        }
-        try {
-            var query = connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidade WHERE CID_CODIGO = ?;', [id]);
-            query
-                .on('error', function(err) {
-                    // Handle error, an 'end' event will be emitted after this as well
-                    console.log("On query error: " + err);
-                })
-                .on('result', function(row) {
-                    // Pausing the connnection is useful if your processing involves I/O
-                    //connection.pause();
-                    results.push(row);
-                    //connection.resume();
-
-                })
-                .on('end', function() {
-                    // all rows have been received
-                    return res.status(200).json(results);
+    banco
+            .select('*')
+            .from('cidade')
+            .where({CID_CODIGO: id})    
+            .on('query-response', function (response, obj, builder) {                
+            })
+            .then(function (response) {
+                // Same response as the emitted event
+               return res.status(200).json({
+                    success: false,
+                    data: response
                 });
-        }
-        catch (e) {
-            console.log("Erro: " + e);
-            return;
-        }
-    });
+            })
+            .catch(function (error) {
+                return res.status(500).json({
+                    success: false,
+                    data: error
+                });
+            });
 }
-
-
-function postCidade(req, res) {}
-
-function putCidade(req, res) {}
-
-function deleteCidade(req, res) {}
