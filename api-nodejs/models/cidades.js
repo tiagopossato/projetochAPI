@@ -17,7 +17,7 @@ module.exports = {
 function getCidades(req, res) {
     var results = [];
     // https://github.com/mysqljs/mysql#streaming-query-rows
-    var query = connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidades ORDER BY CID_NOME ASC;');
+    var query = connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidade ORDER BY CID_NOME ASC;');
     query
         .on('error', function(err) {
             // Handle error, an 'end' event will be emitted after this as well
@@ -25,7 +25,17 @@ function getCidades(req, res) {
         })
         .on('fields', function(fields) {
             // the field packets for the rows to follow
-            results.push(fields);
+            console.log("Field: "+fields);
+            //results.push(fields);
+        })
+        .on('result', function(row) {
+            // Pausing the connnection is useful if your processing involves I/O
+            console.log("Row:" +row);
+            //connection.pause();
+
+            //processRow(row, function() {
+           //     connection.resume();
+           // });
         })
         .on('end', function() {
             // all rows have been received
