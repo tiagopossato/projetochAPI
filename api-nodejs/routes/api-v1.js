@@ -26,17 +26,17 @@ function validaToken(req, res, next) {
         //var id_token = req.headers['x-id_token'];
         //console.log(id_token);
 
-        https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (res) => {
-            console.log('statusCodeGoogle:', res.statusCode);
+        https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (resposta) => {
+            console.log('statusCodeGoogle:', resposta.statusCode);
             //console.log('headersGoogle:', res.headers);
 
-            res.on('data', (d) => {
+            resposta.on('data', (d) => {
                 process.stdout.write(d);
                 if(res.statusCode==200){
                     next();
                 }
                 else{
-                    return res.status(res.statusCode).json({
+                    return res.status(resposta.statusCode).json({
                     success: false,
                     data: d
                 });
