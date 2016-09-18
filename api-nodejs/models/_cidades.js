@@ -1,10 +1,5 @@
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'chucrute',
-    password: 'chucrute',
-    database: 'HORTAPP'
-});
+var pg = require('pg');
+var connectionString = 'postgres://chucrute:chucrute@localhost/chucrute';
 
 module.exports = {
     get: getCidades,
@@ -15,57 +10,36 @@ module.exports = {
 };
 
 function getCidades(req, res) {
+    var results = [];
 
-    connection.connect(function(err) {
-        //caso deu erro
+    // Get a Postgres client from the connection pool
+    pg.connect(connectionString, function(err, client, done) {
+        // Handle connection errors
         if (err) {
-            console.log('Error connecting to Db');
+            done();
             console.log(err);
-            //encerra a conexão
-            connection.end(function(err) {
-                if (err) {
-                    console.log('Erro ao fechar a conexão');
-                }
-            });
             return res.status(500).json({
                 success: false,
                 data: err
             });
         }
-        //caso conectou
-        connection.query('SELECT CID_CODIGO, CID_NOME, UF_CODIGO FROM cidades ORDER BY CID_NOME ASC;',
-            function(err, rows, fields) {
-                //encerra a conexão
-                connection.end(function(err) {
-                    if (err) {
-                        console.log('Erro ao fechar a conexão');
-                    }
-                });
-                
-                //verifica os resultados
-                if (!err) {
-                    return res.json(rows);
-                }
-                else {
-                    return res.status(500).json({
-                        success: false,
-                        data: 'Error while performing Query.'
-                    });
-                }
-            }
-        );
+
+        // SQL Query > Select Data
+        var query = client.query("SELECT id, nome,uf FROM cidades WHERE isativo = TRUE ORDER BY id ASC;");
+
+        // Stream results back one row at a time
+        query.on('row', function(row) {
+            results.push(row);
+        });
+
+        // After all data is returned, close connection and return results
+        query.on('end', function() {
+            done();
+            return res.json(results);
+        });
+
     });
-
 }
-
-function getCidadeById(req, res) {}
-
-function postCidade(req, res) {}
-
-function putCidade(req, res) {}
-
-function deleteCidade(req, res) {}
-/*
 
 function getCidadeById(req, res) {
     var results = [];
@@ -224,6 +198,3 @@ function deleteCidade(req, res) {
     });
 
 }
-
-
-*/
