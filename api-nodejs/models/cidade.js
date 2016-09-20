@@ -16,13 +16,13 @@ module.exports = {
 
 function getCidades(req, res) {
     banco
-            .select('cidCodigo, cidNome, ufCodigo')
+            .select('cidCodigo', 'cidNome', 'ufCodigo')
             .from('CIDADE')
 //            .on('query-response', function (response, obj, builder) {             
 //            })
             .then(function (response) {
                 // Same response as the emitted event
-               return res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     data: response
                 });
@@ -39,14 +39,14 @@ function getCidadeById(req, res) {
     // Grab data from the URL parameters
     var id = req.params.id;
     banco
-            .select('cidCodigo, cidNome, ufCodigo')
+            .select('cidCodigo', 'cidNome', 'ufCodigo')
             .from('CIDADE')
-            .where({cidCodigo: id})    
+            .where({cidCodigo: id})
 //            .on('query-response', function (response, obj, builder) {                
 //            })
             .then(function (response) {
                 // Same response as the emitted event
-               return res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     data: response
                 });
@@ -63,14 +63,14 @@ function getCidadeByUfId(req, res) {
     // Grab data from the URL parameters
     var id = req.params.id;
     banco
-            .select('cidCodigo, cidNome, ufCodigo')
+            .select('cidCodigo', 'cidNome', 'ufCodigo')
             .from('CIDADE')
-            .where({ufCodigo: id})    
+            .where({ufCodigo: id})
 //            .on('query-response', function (response, obj, builder) {                
 //            })
             .then(function (response) {
                 // Same response as the emitted event
-               return res.status(200).json({
+                return res.status(200).json({
                     success: true,
                     data: response
                 });
