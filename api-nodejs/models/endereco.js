@@ -20,8 +20,8 @@ function getEnderecos(req, res) {
     banco
             .select('*')
             .from('ENDERECO')
-            .on('query-response', function (response, obj, builder) {
-            })
+//            .on('query-response', function (response, obj, builder) {
+//            })
             .then(function (response) {
                 // Same response as the emitted event
                 return res.status(200).json({
@@ -43,13 +43,13 @@ function getEnderecoById(req, res) {
 }
 
 function enderecoById(id, res) {
-   //console.log("ID: "+id);
+    //console.log("ID: "+id);
     banco
             .select('*')
             .from('ENDERECO')
             .where({END_CODIGO: id})
-            .on('query-response', function (response, obj, builder) {
-            })
+//            .on('query-response', function (response, obj, builder) {
+//            })
             .then(function (response) {
                 // Same response as the emitted event
                 //console.log(response);
@@ -73,19 +73,19 @@ function postEndereco(req, res) {
      * insert into `coords` (`x`, `y`) values (20, NULL), (NULL, 30), (10, 20)"
      */
     var dados = {
-        END_LOGRADOURO: req.body.END_LOGRADOURO,
-        END_BAIRRO: req.body.END_BAIRRO,
-        END_NUMERO: req.body.END_NUMERO,
-        CID_CODIGO: req.body.CID_CODIGO,
-        END_LATITUDE: req.body.END_LATITUDE,
-        END_LONGITUDE: req.body.END_LONGITUDE,
-        END_CREATED_AT: 'CURRENT_TIMESTAMP',
-        END_UPDATED_AT: 'CURRENT_TIMESTAMP'
+        endLogradouro: req.body.endLogradouro,
+        endBairro: req.body.endBairro,
+        endNumero: req.body.endNumero,
+        cidCodigo: req.body.cidCodigo,
+        endLatitute: req.body.endLatitute,
+        endLongitude: req.body.endLongitude,
+        endCreatedAt: 'NOW()',
+        endUpdatedAt: 'NOW()'
     };
     banco.
             insert(dados)
             .into("ENDERECO")
-            .returning('END_CODIGO')
+            .returning('endCodigo')
             .then(function (id) {
                 enderecoById(id, res);
             });
