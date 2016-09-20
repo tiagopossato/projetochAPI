@@ -17,7 +17,7 @@ function getCidades(req, res) {
     banco
             .select('*')
             .from('CIDADE')
-            .on('query-response', function (response, obj, builder) {                
+            .on('query-response', function (response, obj, builder) {             
             })
             .then(function (response) {
                 // Same response as the emitted event
@@ -40,7 +40,7 @@ function getCidadeById(req, res) {
     banco
             .select('*')
             .from('CIDADE')
-            .where({CID_CODIGO: id})    
+            .where({cidCodigo: id})    
             .on('query-response', function (response, obj, builder) {                
             })
             .then(function (response) {
