@@ -14,6 +14,7 @@ router.use(function(req, res, next) {
 /*CIDADES*/
 router.get('/cidades', validaToken, cidades.get);
 router.get('/cidades/:id', validaToken, cidades.getById);
+router.get('/cidades/estado/:id', validaToken, cidades.getByUfId);
 /*
 router.post('/cidades', validaToken, cidades.post);
 router.put('/cidades/:id', validaToken, cidades.put);
