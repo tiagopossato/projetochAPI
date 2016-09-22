@@ -1,6 +1,6 @@
 var express = require('express');
-var cidades = require('../models/cidade');
-var enderecos = require('../models/endereco');
+var cidades = require('../controls/CidadeController');
+var enderecos = require('../controls/EnderecoController');
 const https = require('https');
 
 var router = express.Router();
