@@ -1,14 +1,5 @@
-var banco = require('knex')({
-    client: 'mysql',
-    connection: {
-        host: '104.236.59.135',
-        user: 'chucrute-testes',
-        password: 'chucrute-testes',
-        database: 'TESTES-HORTAPP',
-        charset: 'utf8'
-    },
-    useNullAsDefault: true
-});
+var banco = require('../models/banco');
+var moment = require('moment-timezone');
 
 module.exports = {
     get: getEnderecos,
@@ -47,7 +38,7 @@ function enderecoById(id, res) {
     banco
             .select('*')
             .from('ENDERECO')
-            .where({END_CODIGO: id})
+            .where({endCodigo: id})
 //            .on('query-response', function (response, obj, builder) {
 //            })
             .then(function (response) {
@@ -72,6 +63,10 @@ function postEndereco(req, res) {
      * knex('coords').insert([{x: 20}, {y: 30}, {x: 10, y: 20}])
      * insert into `coords` (`x`, `y`) values (20, NULL), (NULL, 30), (10, 20)"
      */
+
+    var data = moment().tz("America/Sao_Paulo").format();
+    console.log(data);
+
     var dados = {
         endLogradouro: req.body.endLogradouro,
         endBairro: req.body.endBairro,
@@ -79,14 +74,22 @@ function postEndereco(req, res) {
         cidCodigo: req.body.cidCodigo,
         endLatitute: req.body.endLatitute,
         endLongitude: req.body.endLongitude,
-        endCreatedAt: 'NOW()',
-        endUpdatedAt: 'NOW()'
-    };
+        endCreatedAt: data,
+        endUpdatedAt: data
+    };    
+    console.log(dados);
+
     banco.
             insert(dados)
             .into("ENDERECO")
             .returning('endCodigo')
             .then(function (id) {
                 enderecoById(id, res);
+            })
+            .catch(function (error) {
+                return res.status(500).json({
+                    success: false,
+                    data: error
+                });
             });
 }

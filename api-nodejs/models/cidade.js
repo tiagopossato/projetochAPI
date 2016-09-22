@@ -1,13 +1,5 @@
-var banco = require('knex')({
-    client: 'mysql',
-    connection: {
-        host: '104.236.59.135',
-        user: 'chucrute-testes',
-        password: 'chucrute-testes',
-        database: 'TESTES-HORTAPP',
-        charset: 'utf8'
-    }
-});
+var banco = require('../models/banco');
+
 module.exports = {
     get: getCidades,
     getById: getCidadeById,
