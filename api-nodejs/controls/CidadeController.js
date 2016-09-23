@@ -1,8 +1,7 @@
 "use strict";
-let banco = require('../models/banco');
-let Uf = require('../models/Ufs').Uf;
-let Cidade = require('../models/Cidades').Cidade;
-let Cidades = require('../models/Cidades').Cidades;
+var banco = require('../models/banco');
+var Uf = require('../models/Ufs').Uf;
+var Cidade = require('../models/Cidades');
 
 module.exports = {
     get: getCidades,
@@ -11,93 +10,41 @@ module.exports = {
 };
 
 function getCidades(req, res) {
-    banco
-            .select('cidCodigo', 'cidNome', 'ufCodigo')
-            .from('CIDADE')
-//            .on('query-response', function (response, obj, builder) {             
-//            })
-            .then(function (response) {
-                // Same response as the emitted event
-                return res.status(200).json({
-                    success: true,
-                    data: response
-                });
+    Cidade.forge()
+            .fetchAll()
+            .then(function (cidades) {
+                res.status(200).json({error: false, data: cidades.toJSON()});
             })
-            .catch(function (error) {
-                return res.status(500).json({
-                    success: false,
-                    data: error
-                });
+            .catch(function (err) {
+                res.status(500).json({error: true, data: {message: err.message}});
             });
 }
 
 function getCidadeById(req, res) {
     // Grab data from the URL parameters
-    let id = req.params.id;
-	Cidade.forge({cidCodigo: id})
-	.fetch()
-	.then(function(cidades) {
-	//console.log(JSON.stringify(cidades.related('cidades')));
-    	res.status(200).json({error: false, data: cidades.toJSON()});
-	})
-	.catch(function (err) {
-		res.status(500).json({error: true, data: {message: err.message}});
-	});
+    var id = req.params.id;
 
-/*
- 	Cidade.forge({cidCodigo: id})
-    .fetch()
-    .then(function (cidade) {
-      if (!cidade) {
-	//console.log('Nada');
-        res.status(404).json({error: true, data: {}});
-      }
-      else {
-	//console.log('Achou');
-	//console.log(cidade.toJSON());
-        res.status(200).json({error: false, data: cidade.toJSON()});
-      }
-    })
-    .catch(function (err) {
-	//console.log(err.message)
-    res.status(500).json({error: true, data: {message: err.message}});
-    });
-
-*/
-/*
-    banco
-            .select('cidCodigo', 'cidNome', 'ufCodigo')
-            .from('CIDADE')
-            .where({cidCodigo: id})
-//            .on('query-response', function (response, obj, builder) {                
-//            })
-            .then(function (response) {
-                // Same response as the emitted event
-                return res.status(200).json({
-                    success: true,
-                    data: response
-                });
+    Cidade.where({cidCodigo: id})
+            .fetch()
+            .then(function (cidades) {
+                //console.log(JSON.stringify(cidades.related('cidades')));
+                res.status(200).json({error: false, data: cidades.toJSON()});
             })
-            .catch(function (error) {
-                return res.status(500).json({
-                    success: false,
-                    data: error
-                });
+            .catch(function (err) {
+                res.status(500).json({error: true, data: {message: err.message}});
             });
-*/
 }
 
 function getCidadeByUfId(req, res) {
     // Grab data from the URL parameters
-    let id = req.params.id;
-
-	Uf.where({ufCodigo: id})
-	.fetch({withRelated: ['cidades']})
-	.then(function(cidades) {
-	//console.log(JSON.stringify(cidades.related('cidades')));
-    	res.status(200).json({error: false, data: cidades.toJSON()});
-	})    
-	.catch(function (err) {
-		res.status(500).json({error: true, data: {message: err.message}});
-	});
+    var id = req.params.id;
+    Uf.where({ufCodigo: id})
+            .fetch({withRelated: ['cidades']})
+            .then(function (cidades) {
+                //console.log(JSON.stringify(cidades.related('cidades')));
+                res.status(200).json({error: false, data: cidades.toJSON()});
+            })
+            .catch(function (err) {
+                res.status(500).json({error: true, data: {message: err.message}});
+            });
 }
