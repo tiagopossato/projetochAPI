@@ -1,6 +1,6 @@
 "use strict";
 let bookshelf = require('bookshelf')(require('../models/banco'));
-let Cidade = require('../models/Cidades').Cidade;
+let Cidade = require('../models/Cidades');
 
 var Uf = bookshelf.Model.extend({
   tableName: 'UF',
@@ -13,8 +13,8 @@ var Uf = bookshelf.Model.extend({
   },
 });
 
-var Ufs = bookshelf.Collection.extend({
-  model: Uf
-});
+//let Ufs = bookshelf.Collection.extend({
+//  model: Uf
+//});
 
-module.exports = {Uf, Ufs};
+module.exports = Uf;
