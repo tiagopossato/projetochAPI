@@ -32,14 +32,14 @@ function enderecoById(id, res) {
                 res.status(200).json({error: false, data: enderecos.toJSON()});
             })
             .catch(function (err) {
-                res.status(500).json({error: true, data: {message: err.message}});
+                res.status(500).json({error: true, data: {message: err}});
             });
 }
 
 function postEndereco(req, res) {
 
     var data = moment().tz("America/Sao_Paulo").format();
-
+    
     var dados = {
         endLogradouro: req.body.endLogradouro,
         endBairro: req.body.endBairro,
@@ -51,6 +51,7 @@ function postEndereco(req, res) {
         endUpdatedAt: data
     };
 
+//console.log(dados);
 
     Endereco.forge({dados})
             .save()
