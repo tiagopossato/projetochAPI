@@ -1,10 +1,12 @@
 "use strict";
 let bookshelf = require('bookshelf')(require('../models/banco'));
-var Uf = require('../models/Ufs').Uf;
+bookshelf.plugin('visibility');
+let Uf = require('../models/Ufs').Uf;
 
 let Cidade = bookshelf.Model.extend({
 	tableName: 'CIDADE',
 	idAttribute: 'cidCodigo',
+	hidden: ['cidUpdatedAt', 'cidCreatedAt'],
 	uf: function(){
 		return this.hasOne(Uf, 'ufCodigo');
 	},
