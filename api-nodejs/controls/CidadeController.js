@@ -1,6 +1,6 @@
 "use strict";
 let banco = require('../models/banco');
-let Uf = require('../models/Ufs');
+let Uf = require('../models/Ufs').Uf;
 let Cidade = require('../models/Cidades').Cidade;
 let Cidades = require('../models/Cidades').Cidades;
 
@@ -34,7 +34,17 @@ function getCidades(req, res) {
 function getCidadeById(req, res) {
     // Grab data from the URL parameters
     let id = req.params.id;
+	Cidade.forge({cidCodigo: id})
+	.fetch()
+	.then(function(cidades) {
+	//console.log(JSON.stringify(cidades.related('cidades')));
+    	res.status(200).json({error: false, data: cidades.toJSON()});
+	})
+	.catch(function (err) {
+		res.status(500).json({error: true, data: {message: err.message}});
+	});
 
+/*
  	Cidade.forge({cidCodigo: id})
     .fetch()
     .then(function (cidade) {
@@ -52,6 +62,8 @@ function getCidadeById(req, res) {
 	//console.log(err.message)
     res.status(500).json({error: true, data: {message: err.message}});
     });
+
+*/
 /*
     banco
             .select('cidCodigo', 'cidNome', 'ufCodigo')
@@ -79,36 +91,13 @@ function getCidadeByUfId(req, res) {
     // Grab data from the URL parameters
     let id = req.params.id;
 
-	Uf.Uf.where({ufCodigo: id})
+	Uf.where({ufCodigo: id})
 	.fetch({withRelated: ['cidades']})
 	.then(function(cidades) {
-		console.log(JSON.stringify(cidades.related('ufs')));
+	//console.log(JSON.stringify(cidades.related('cidades')));
     	res.status(200).json({error: false, data: cidades.toJSON()});
 	})    
 	.catch(function (err) {
 		res.status(500).json({error: true, data: {message: err.message}});
 	});
-
-/*
-    Uf.Uf.forge({ufCodigo: id})
-    .fetch({withRelated: ['cidades']})
-    .then(function (cidades) {
-      let cidades = cidades.related('cidades');
-      res.json({error: false, data: cidades.toJSON()});
-    })
-    .catch(function (err) {
-	res.status(500).json(
-		{error: true, data: {message: err.message}});
-	});
-*/
-
-/*
-// select * from `books` where author_id = 1
-Author
-	.where({id: 1})
-	.fetch({withRelated: ['books']})
-	.then(function(author) {
-		console.log(JSON.stringify(author.related('books')));
-	});
-*/
 }

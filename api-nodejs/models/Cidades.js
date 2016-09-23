@@ -1,12 +1,16 @@
 "use strict";
 let bookshelf = require('bookshelf')(require('../models/banco'));
-let Uf = require('../models/Ufs').Uf;
+var Uf = require('../models/Ufs').Uf;
 
 let Cidade = bookshelf.Model.extend({
 	tableName: 'CIDADE',
-	ufs: function(){
-		return this.belongsTo(Uf, 'ufCodigo');
-	}
+	idAttribute: 'cidCodigo',
+	uf: function(){
+		return this.hasOne(Uf, 'ufCodigo');
+	},
+//	  enderecos: function () {
+//	    return this.hasMany(Endereco, 'cidCodigo');
+//	  }
 });
 
 let Cidades = bookshelf.Collection.extend({
