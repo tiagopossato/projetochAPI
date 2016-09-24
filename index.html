@@ -19,6 +19,16 @@
 </head>
 
 <body>
+
+	<div class="col-sm-5">
+		<div class="user">
+				<img id="user-photo" src="https://mariovalney.com/wp-content/uploads/2015/06/user-anonimo.jpg"></img>
+				<h1>Olá, <span id="user-name">visitante</span>!</h1>
+				<p id="user-email"></p>
+			</div>
+			<div class="g-signin2 col-sm-12" data-onsuccess="onSignIn" data-theme="dark" data-longtitle="true" data-lang="pt-BR"></div>
+	</div>
+
 	<div class="col-sm-5">
 		<form role="form" action="" class="form-horizontal" id="formCadastro">
 			<div class="form-group">
@@ -36,31 +46,31 @@
 				<div class="col-sm-4">
 					<select class="form-control" id="uf" name="uf">
             <option>AC</option>
-            <option>AL</option>  
-            <option>AM</option> 
-            <option>BA</option> 
-            <option>CE</option> 
-            <option>DF</option> 
-            <option>ES</option> 
-            <option>GO</option> 
-            <option>MA</option> 
-            <option>MT</option> 
-            <option>MS</option> 
-            <option>MG</option> 
+            <option>AL</option>
+            <option>AM</option>
+            <option>BA</option>
+            <option>CE</option>
+            <option>DF</option>
+            <option>ES</option>
+            <option>GO</option>
+            <option>MA</option>
+            <option>MT</option>
+            <option>MS</option>
+            <option>MG</option>
             <option>PA</option>
-            <option>PB</option>  
-            <option>PR</option>  
-            <option>PE</option>  
-            <option>PI</option>  
-            <option>RJ</option>  
-            <option>RN</option>  
-            <option>RS</option>  
-            <option>RO</option>  
-            <option>RR</option>  
-            <option>SC</option>  
-            <option>SP</option>  
-            <option>SE</option>  
-            <option>TO</option>  
+            <option>PB</option>
+            <option>PR</option>
+            <option>PE</option>
+            <option>PI</option>
+            <option>RJ</option>
+            <option>RN</option>
+            <option>RS</option>
+            <option>RO</option>
+            <option>RR</option>
+            <option>SC</option>
+            <option>SP</option>
+            <option>SE</option>
+            <option>TO</option>
         </select>
 				</div>
 			</div>
@@ -75,7 +85,7 @@
 	<div id="tabelaCidades" class="col-sm-7">
 		<!--aqui vem a tabela de cidades-->
 	</div>
-	
+
 	<div class="col-sm-12">
 		<form role="form" action="" id="formEndereco" class="form-horizontal">
 			<fieldset>
@@ -85,7 +95,7 @@
 
 			<!-- Text input-->
 			<div class="form-group">
-			  <label class="col-md-4 control-label" for="endLogradouro">endLogradouro</label>  
+			  <label class="col-md-4 control-label" for="endLogradouro">endLogradouro</label>
 			  <div class="col-md-4">
 			  <input id="endLogradouro" name="endLogradouro" type="text" placeholder="END_LOGRADOURO" class="form-control input-md">
 
@@ -94,7 +104,7 @@
 
 			<!-- Text input-->
 			<div class="form-group">
-			  <label class="col-md-4 control-label" for="endBairro">endBairro</label>  
+			  <label class="col-md-4 control-label" for="endBairro">endBairro</label>
 			  <div class="col-md-4">
 			  <input id="endBairro" name="endBairro" type="text" placeholder="endBairro" class="form-control input-md">
 
@@ -103,7 +113,7 @@
 
 			<!-- Text input-->
 			<div class="form-group">
-			  <label class="col-md-4 control-label" for="endNumero">endNumero</label>  
+			  <label class="col-md-4 control-label" for="endNumero">endNumero</label>
 			  <div class="col-md-4">
 			  <input id="endNumero" name="endNumero" type="text" placeholder="endNumero" class="form-control input-md">
 
@@ -112,7 +122,7 @@
 
 			<!-- Text input-->
 			<div class="form-group">
-			  <label class="col-md-4 control-label" for="cidCodigo">cidCodigo</label>  
+			  <label class="col-md-4 control-label" for="cidCodigo">cidCodigo</label>
 			  <div class="col-md-4">
 			  <input id="cidCodigo" name="cidCodigo" type="text" placeholder="cidCodigo" class="form-control input-md">
 
@@ -121,7 +131,7 @@
 
 			<!-- Text input-->
 			<div class="form-group">
-			  <label class="col-md-4 control-label" for="endLatitute">endLatitute</label>  
+			  <label class="col-md-4 control-label" for="endLatitute">endLatitute</label>
 			  <div class="col-md-4">
 			  <input id="endLatitute" name="endLatitute" type="text" placeholder="endLatitute" class="form-control input-md">
 
@@ -130,7 +140,7 @@
 
 			<!-- Text input-->
 			<div class="form-group">
-			  <label class="col-md-4 control-label" for="endLongitude">endLongitude</label>  
+			  <label class="col-md-4 control-label" for="endLongitude">endLongitude</label>
 			  <div class="col-md-4">
 			  <input id="endLongitude" name="endLongitude" type="text" placeholder="endLongitude" class="form-control input-md">
 
@@ -144,11 +154,31 @@
 				</div>
 			</div>
 			</form>
-	</div>	
+	</div>
 	<script>
-		//var id_token = 'EyJhbGciOiJSUzI1NiIsImtpZCI6ImVmMDgyMWExNWU4M2Q3YjM5MjU4ZTgyZTlmNWVhYjFlNzIzOGY4OTUifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Im83UjFWN0E3SGpKZWtyNmhraGREMUEiLCJhdWQiOiIyODEyNzUzNTIwMDMtbnJibHV0aGdqbmFjaDJsb20xdTE1cGN0NnFqMGxnbjAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY3MjgxODY1NDM4MTYxMzM2MzMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMjgxMjc1MzUyMDAzLW5yYmx1dGhnam5hY2gybG9tMXUxNXBjdDZxajBsZ24wLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJlc3RhZ2lhcmlvLmVsZXRyb0BnbWFpbC5jb20iLCJpYXQiOjE0NzI2MDkzOTIsImV4cCI6MTQ3MjYxMjk5MiwibmFtZSI6IlRpYWdvIFBvc3NhdG8iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDYuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1ydVRNT2JKWUxEdy9BQUFBQUFBQUFBSS9BQUFBQUFBQUFEby9vVXdlWnFQenJiWS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiVGlhZ28iLCJmYW1pbHlfbmFtZSI6IlBvc3NhdG8iLCJsb2NhbGUiOiJwdCJ9.67B2hAE58ccTbphAhHB-pn93lFW_KixbTiNoTuy1_8sPjauRG7vAA4kf2BDuEbU4wNW_Tj0lrxQbryVcDx_S73kzmPDUQCe0ohLlAuPGjNQPAYqvu2ELvldNPYVELRhwW-BUFnKmlgjL33V7ZKU6MDCKjLZ7JovD1Ww4oawyVcQRm0c8OrdsKB-5bGPou8B3_oQMkeilQ_94b6V49dwLjqhLCkY3Lgi_NP4C5XzVT1dH6yNfgGS6p93SNldGfJxGsce50suJFuN-n2yB-enF6gEMnlNhuz-7UZfNi-p1clt3ZRT9vY-WWCLU7xtPanjQsCvKTgorEZsSveks5uDE7g';
+		var id_token = 'EyJhbGciOiJSUzI1NiIsImtpZCI6ImVmMDgyMWExNWU4M2Q3YjM5MjU4ZTgyZTlmNWVhYjFlNzIzOGY4OTUifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Im83UjFWN0E3SGpKZWtyNmhraGREMUEiLCJhdWQiOiIyODEyNzUzNTIwMDMtbnJibHV0aGdqbmFjaDJsb20xdTE1cGN0NnFqMGxnbjAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY3MjgxODY1NDM4MTYxMzM2MzMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMjgxMjc1MzUyMDAzLW5yYmx1dGhnam5hY2gybG9tMXUxNXBjdDZxajBsZ24wLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJlc3RhZ2lhcmlvLmVsZXRyb0BnbWFpbC5jb20iLCJpYXQiOjE0NzI2MDkzOTIsImV4cCI6MTQ3MjYxMjk5MiwibmFtZSI6IlRpYWdvIFBvc3NhdG8iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDYuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1ydVRNT2JKWUxEdy9BQUFBQUFBQUFBSS9BQUFBQUFBQUFEby9vVXdlWnFQenJiWS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiVGlhZ28iLCJmYW1pbHlfbmFtZSI6IlBvc3NhdG8iLCJsb2NhbGUiOiJwdCJ9.67B2hAE58ccTbphAhHB-pn93lFW_KixbTiNoTuy1_8sPjauRG7vAA4kf2BDuEbU4wNW_Tj0lrxQbryVcDx_S73kzmPDUQCe0ohLlAuPGjNQPAYqvu2ELvldNPYVELRhwW-BUFnKmlgjL33V7ZKU6MDCKjLZ7JovD1Ww4oawyVcQRm0c8OrdsKB-5bGPou8B3_oQMkeilQ_94b6V49dwLjqhLCkY3Lgi_NP4C5XzVT1dH6yNfgGS6p93SNldGfJxGsce50suJFuN-n2yB-enF6gEMnlNhuz-7UZfNi-p1clt3ZRT9vY-WWCLU7xtPanjQsCvKTgorEZsSveks5uDE7g';
 		var id_token;
 		var access_token;
+		function onSignIn(response) {
+				// Conseguindo as informações do seu usuário:
+				var perfil = response.getBasicProfile();
+				// Conseguindo o ID do Usuário
+				var userID = perfil.getId();
+				// Conseguindo o Nome do Usuário
+				var userName = perfil.getName();
+				// Conseguindo o E-mail do Usuário
+				var userEmail = perfil.getEmail();
+				// Conseguindo a URL da Foto do Perfil
+				var userPicture = perfil.getImageUrl();
+				document.getElementById('user-photo').src = userPicture;
+				document.getElementById('user-name').innerText = userName;
+				document.getElementById('user-email').innerText = userEmail;
+				// Recebendo o TOKEN que você usará nas demais requisições à API:
+				access_token = response.getAuthResponse().access_token;
+				//id_token = response.getAuthResponse().id_token;
+				console.log("access_token: " + access_token);
+				//access_token = 'ya29.CjBQA367SZpi--h4WRRcp-Wjihydv0zffJc55LsvPCEkjQNV_zzKIQ5QTwfWv4ReZjoe'
+			};
 
 		function leCidades() {
 			$.ajax({
@@ -227,7 +257,7 @@
 			});
 			e.preventDefault();
 		}
-		
+
 		function leEnderecos() {
 			$.ajax({
 				url: 'http://localhost:3000/v1/enderecos',
@@ -244,7 +274,7 @@
 				}
 			});
 		}
-		
+
 		function enviaEndereco(e) {
 			var dados = $(this).serialize();
 			$.ajax({
@@ -262,11 +292,11 @@
 				});
 			e.preventDefault();
 		}
-		
+
 			$('#formCadastro').submit(enviaCadastro);
 			$('#formEndereco').submit(enviaEndereco);
 			//leCidades();
-		
+
 	</script>
 </body>
 
