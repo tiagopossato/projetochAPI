@@ -1,12 +1,12 @@
 "use strict";
 let bookshelf = require('bookshelf')(require('../models/banco'));
-let Cidade = require('../models/Cidades');
+let Cidade = require('../models/Cidade');
 
 var Uf = bookshelf.Model.extend({
   tableName: 'UF',
   idAttribute: 'ufCodigo',
   cidades: function () {
-    return this.hasMany(Cidade, 'ufCodigo');
+    return this.hasMany(Cidade, 'cidCodigo');
   },
 	cidade: function () {
     return this.belongsToMany(Cidade, 'ufCodigo');

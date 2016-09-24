@@ -1,7 +1,7 @@
 "use strict";
 let bookshelf = require('bookshelf')(require('../models/banco'));
 bookshelf.plugin('visibility');
-let Uf = require('../models/Ufs');
+let Uf = require('../models/Uf');
 
 let Cidade = bookshelf.Model.extend({
 	tableName: 'CIDADE',

@@ -1,7 +1,7 @@
 "use strict";
 var banco = require('../models/banco');
 var moment = require('moment-timezone');
-var Endereco = require('../models/Enderecos');
+var Endereco = require('../models/Endereco');
 
 module.exports = {
     get: getEnderecos,
@@ -39,7 +39,7 @@ function enderecoById(id, res) {
 function postEndereco(req, res) {
 
     var data = moment().tz("America/Sao_Paulo").format();
-    
+
     var dados = {
         endLogradouro: req.body.endLogradouro,
         endBairro: req.body.endBairro,

@@ -1,7 +1,7 @@
 "use strict";
 var banco = require('../models/banco');
-var Uf = require('../models/Ufs').Uf;
-var Cidade = require('../models/Cidades');
+var Uf = require('../models/Uf').Uf;
+var Cidade = require('../models/Cidade');
 
 module.exports = {
     get: getCidades,
