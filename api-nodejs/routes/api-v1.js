@@ -1,6 +1,7 @@
 var express = require('express');
 var cidades = require('../controls/CidadeController');
 var enderecos = require('../controls/EnderecoController');
+var usuarios = require('../controls/UsuarioController');
 const https = require('https');
 
 var router = express.Router();
@@ -13,8 +14,8 @@ router.use(function(req, res, next) {
 
 /*CIDADES*/
 router.get('/cidades', validaToken, cidades.get);
-router.get('/cidades/:id', validaToken, cidades.getById);
-router.get('/cidades/estado/:id', validaToken, cidades.getByUfId);
+router.get('/cidades/:id', cidades.getById);
+router.get('/cidades/estado/:id', cidades.getByUfId);
 /*
 router.post('/cidades', validaToken, cidades.post);
 router.put('/cidades/:id', validaToken, cidades.put);
@@ -22,45 +23,44 @@ router.delete('/cidades/:id', validaToken, cidades.delete);
 */
 
 /*ENDERECOS*/
-
-router.get('/enderecos', validaToken, enderecos.get);
-router.get('/enderecos/:id', validaToken, enderecos.getById);
-router.post('/enderecos', validaToken, enderecos.post);
+router.get('/enderecos', enderecos.get);
+router.get('/enderecos/:id', enderecos.getById);
+router.post('/enderecos', enderecos.post);
 
 function validaToken(req, res, next) {
-     next();
-     return;
+    //  next();
+    //  return;
     try {
-        var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
+        // var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
 
         var access_token = req.headers['x-access_token'];
         //var id_token = req.headers['x-id_token'];
-        //console.log(id_token);
+        console.log(access_token);
+
 
         https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (resposta) => {
-
             resposta.on('data', (d) => {
-                process.stdout.write(d);
                 if(resposta.statusCode==200){
                   console.log('statusCodeGoogle:', resposta.statusCode);
-                  console.log('headersGoogle:', res.headers);
-                  console.log("chamaria next aqui");
-                    // next();
+                  console.log('headersGoogle:', d);
+                  for (var key of d.keys()) {
+                  console.log(key);
+                }
+                  next();
                 }
                 else{
                     return res.status(resposta.statusCode).json({
-                    success: false,
-                    data: d
+                    error: true,
+                    data: "Falha na autenticação!"
                 });
                 }
             });
 
         }).on('error', (e) => {
-             console.error(e);
-
+             console.error("Erro try: "+e);
             return res.status(500).json({
                     success: false,
-                    data: e
+                    data: e.message
                 });
         });
 
@@ -70,5 +70,7 @@ function validaToken(req, res, next) {
     }
 }
 
-
+/*USUARIO*/
+// router.get('/usuario/login', validaToken, enderecos.get);
+// router.post('/usuario/sigin', validaToken, enderecos.get);
 module.exports = router;

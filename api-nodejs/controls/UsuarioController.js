@@ -1,10 +1,8 @@
-"use strict";
 var Usuario = require('../models/Usuario');
 
 module.exports = {
-    getByGoogleId: getUsuarioByGoogleId,
-    post: postUsuario
-  };
+    login: getUsuarioByGoogleId
+    };
 
 function getUsuarioByGoogleId(req, res) {
     // Grab data from the URL parameters
