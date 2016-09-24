@@ -28,8 +28,8 @@ router.get('/enderecos/:id', validaToken, enderecos.getById);
 router.post('/enderecos', validaToken, enderecos.post);
 
 function validaToken(req, res, next) {
-    next();
-    return;
+     next();
+     return;
     try {
         var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
 
@@ -38,13 +38,14 @@ function validaToken(req, res, next) {
         //console.log(id_token);
 
         https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (resposta) => {
-            console.log('statusCodeGoogle:', resposta.statusCode);
-            //console.log('headersGoogle:', res.headers);
 
             resposta.on('data', (d) => {
                 process.stdout.write(d);
                 if(resposta.statusCode==200){
-                    next();                   
+                  console.log('statusCodeGoogle:', resposta.statusCode);
+                  console.log('headersGoogle:', res.headers);
+                  console.log("chamaria next aqui");
+                    // next();
                 }
                 else{
                     return res.status(resposta.statusCode).json({
