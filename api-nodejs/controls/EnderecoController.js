@@ -53,7 +53,7 @@ function postEndereco(req, res) {
 
 //console.log(dados);
 
-    Endereco.forge({dados})
+    Endereco.forge(dados)
             .save()
             .then(function (endereco) {
                 enderecoById(endereco.get('endCodigo'), res);
