@@ -13,7 +13,7 @@ router.use(function(req, res, next) {
 });
 
 /*CIDADES*/
-router.get('/cidades',  usuarios.getUserData, cidades.get);
+router.get('/cidades',  usuarios.validaToken, cidades.get);
 router.get('/cidades/:id', usuarios.validaToken, cidades.getById);
 router.get('/cidades/estado/:id', usuarios.validaToken, cidades.getByUfId);
 /*
@@ -28,6 +28,6 @@ router.get('/enderecos/:id', usuarios.validaToken, enderecos.getById);
 router.post('/enderecos', usuarios.validaToken, enderecos.post);
 
 /*USUARIO*/
-// router.get('/usuario/login', validaToken, enderecos.get);
+router.get('/usuario/login', usuarios.login);
 // router.post('/usuario/sigin', validaToken, enderecos.get);
 module.exports = router;

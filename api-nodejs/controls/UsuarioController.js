@@ -3,7 +3,7 @@ const https = require('https');
 
 module.exports = {
   login: getUsuarioByGoogleId,
-  getUserData: getUserData,
+  login: login,
   validaToken: validaToken
 };
 
@@ -19,35 +19,12 @@ function getUsuarioByGoogleId(googleId) {
   });
 }
 
-
-function upsertUsuario(dados, req, res, next){
-  Usuario.where({usuIdGoogle: dados['usuIdGoogle']})
-  .fetch()
-  .then(function (user) {
-    // console.log(user);
-    if(user){
-      usuario = user.toJSON();
-      var id = usuario['usuCodigo'];
-      console.log("id: "+id);
-      if(id){
-        dados['usuCodigo'] = id;
-        updateUsuario(dados, req, res, next);
-      }
-    }
-    else  newUsuario(dados, req, res, next);
-  })
-  .catch(function (err) {
-    console.log(err.message);
-    res.status(500).json({error: true, data: err.message});
-  });
-}
-
 function newUsuario(dados, req, res, next){
   Usuario.forge(dados)
   .save()
   .then(function (usuario) {
     console.log(usuario);
-    res.status(200).json({error: false, data: "Usuário criado!"});
+    res.status(200).json({error: false, completarCadastro: true});
   })
   .catch(function (err) {
     console.log(err.message);
@@ -71,8 +48,30 @@ function updateUsuario(dados, req, res, next){
   });
 }
 
+function upsertUsuario(dados, req, res, next){
+  Usuario.where({usuIdGoogle: dados['usuIdGoogle']})
+  .fetch()
+  .then(function (user) {
+    // console.log(user);
+    if(user){
+      usuario = user.toJSON();
+      var id = usuario['usuCodigo'];
+      console.log("id: "+id);
+      if(id){
+        dados['usuCodigo'] = id;
+        updateUsuario(dados, req, res, next);
+      }
+    }
+    else  newUsuario(dados, req, res, next);
+  })
+  .catch(function (err) {
+    console.log(err.message);
+    res.status(500).json({error: true, data: err.message});
+  });
+}
+
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
-function getUserData(req, res, next){
+function login(req, res, next){
   var access_token = req.headers['x-access_token'];
 
   var url = 'https://www.googleapis.com/plus/v1/people/me?access_token='+ access_token;
@@ -121,27 +120,46 @@ function validaToken(req, res, next) {
     var access_token = req.headers['x-access_token'];
     https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (resposta) => {
       resposta.on('data', (d) => {
-        console.log('statusCodeGoogle:', resposta.statusCode);
-        console.log(JSON.parse(d));
+        //console.log('statusCodeGoogle:', resposta.statusCode);
+        let dados = JSON.parse(d);
+        console.log(dados);
         if(resposta.statusCode==200){
-          next();
+          Usuario.where({usuIdGoogle: dados['sub']})
+          .fetch()
+          .then(function (user) {
+            if(user){
+              usuario = user.toJSON();
+              var id = usuario['usuCodigo'];
+              if(id){
+                next();
+              }else res.status(500).json({error: true, data: "Parece que você está cadastrado, mas um erro ocorreu no sistema!!"});
+            }
+            else res.status(500).json({error: true, data: "Você precisa estar cadastrado para acessar essa parte do sistema!"});
+          })
+          .catch(function (err) {
+            res.status(500).json({error: true, data: err.message});
+          });
         }
         else{
+          //console.log(dados['error_description']);
           return res.status(resposta.statusCode).json({
             error: true,
-            data: JSON.parse(d)
+            data: dados['error_description']
           });
         }
       });
-    }).on('error', (e) => {
-      console.error(e);
+    }).on('error', (err) => {
+      //console.error(err.message);
       return res.status(500).json({
         error: true,
-        data: e
+        data: err.message
       });
     });
   }
   catch (err) {
-    console.log("Erro geral:" + err);
+    return res.status(500).json({
+      error: true,
+      data: err.message
+    });
   }
 }
