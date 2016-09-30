@@ -72,23 +72,27 @@ function upsertUsuario(dados, req, res, next){
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next){
-  var access_token = req.headers['x-access_token'];
+	console.log(req.headers);
 
-  var url = 'https://www.googleapis.com/plus/v1/people/me?access_token='+ access_token;
+  var id_token = req.headers['idToken'];
+
+  var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ access_token;
   try {
     https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         let gData = JSON.parse(d);
-        //console.log(gData);
+        console.log(gData);
         if(resposta.statusCode==200){
           console.log('statusCodeGoogle:', resposta.statusCode);
           var dados={
-            usuIdGoogle: gData['id'],
+            usuIdGoogle: gData['sub'],
             usuNome:  gData['name']['givenName']+" "+gData['name']['familyName'],
             usuEmail: gData['emails'][0]['value'],
             usuImagem: gData['image']['url']
-          };
-          upsertUsuario(dados, req, res, next);
+          };          
+          console.log("aqui deveria dar o upsertUsuario");
+					res.status(200).json({error: false, data: "Usuário!"+usuNome});
+        //  upsertUsuario(dados, req, res, next);
         }
         else{
           console.log("Falha no get dados: "+ resposta.statusCode);
