@@ -8,7 +8,7 @@ var router = express.Router();
 
 router.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "x-access_token, idToken, Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "idtoken, Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
@@ -29,5 +29,6 @@ router.post('/enderecos', usuarios.validaToken, enderecos.post);
 
 /*USUARIO*/
 router.get('/usuario/login', usuarios.login);
+router.put('/usuario/update/:id', usuarios.update);
 // router.post('/usuario/sigin', validaToken, enderecos.get);
 module.exports = router;

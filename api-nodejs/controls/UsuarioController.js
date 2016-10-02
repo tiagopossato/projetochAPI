@@ -2,9 +2,10 @@ var Usuario = require('../models/Usuario');
 const https = require('https');
 
 module.exports = {
-  login: getUsuarioByGoogleId,
+  //login: getUsuarioByGoogleId,
   login: login,
-  validaToken: validaToken
+  validaToken: validaToken,
+	update: update
 };
 
 function getUsuarioByGoogleId(googleId) {
@@ -20,10 +21,11 @@ function getUsuarioByGoogleId(googleId) {
 }
 
 function newUsuario(dados, req, res, next){
+  console.log("Novo Usuario: -----------------------------------------------------");
   Usuario.forge(dados)
   .save()
   .then(function (usuario) {
-    console.log(usuario);
+    //console.log(usuario);
     res.status(200).json({error: false, completarCadastro: true});
   })
   .catch(function (err) {
@@ -34,12 +36,12 @@ function newUsuario(dados, req, res, next){
 
 function updateUsuario(dados, req, res, next){
   console.log("Update: -----------------------------------------------------");
-  console.log(dados);
+	//console.log(dados);
 
   Usuario.forge({usuCodigo: dados['usuCodigo']})
   .save(dados)
   .then(function (usuario) {
-    console.log(usuario);
+    //console.log(usuario);
     res.status(200).json({error: false, data: "Usuário alterado!"});
   })
   .catch(function (err) {
@@ -72,33 +74,29 @@ function upsertUsuario(dados, req, res, next){
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next){
-	console.log(req.headers);
-
-  var id_token = req.headers['idToken'];
-
-  var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ access_token;
+	//console.log(req.headers);
   try {
+  var id_token = req.headers['idtoken'];
+  var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ id_token;
     https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         let gData = JSON.parse(d);
-        console.log(gData);
+				//console.log(gData);
         if(resposta.statusCode==200){
-          console.log('statusCodeGoogle:', resposta.statusCode);
+          //console.log('statusCodeGoogle:', resposta.statusCode);
           var dados={
             usuIdGoogle: gData['sub'],
-            usuNome:  gData['name']['givenName']+" "+gData['name']['familyName'],
-            usuEmail: gData['emails'][0]['value'],
-            usuImagem: gData['image']['url']
+            usuNome:  gData['name'],
+            usuEmail: gData['email'],
+            usuImagem: gData['picture']	
           };          
-          console.log("aqui deveria dar o upsertUsuario");
-					res.status(200).json({error: false, data: "Usuário!"+usuNome});
-        //  upsertUsuario(dados, req, res, next);
+        	upsertUsuario(dados, req, res, next);
         }
         else{
           console.log("Falha no get dados: "+ resposta.statusCode);
           return res.status(resposta.statusCode).json({
             error: true,
-            data: resposta.message
+            data: gData['error_description']
           });
         }
       });
@@ -118,17 +116,31 @@ function login(req, res, next){
   }
 }
 
+function update(req, res, next){
+	console.log("update");
+	console.log(request.body);
+return;
+	var id = req.params.id;
+	var dados={
+		usuIdGoogle: id,
+//		usuTokenFcm: 
+	};
+	upsertUsuario(dados, req, res, next);
+}
+
+
 function validaToken(req, res, next) {
+	
   try {
-    var clientId = '281275352003-nrbluthgjnach2lom1u15pct6qj0lgn0.apps.googleusercontent.com';
-    var access_token = req.headers['x-access_token'];
-    https.get('https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + access_token, (resposta) => {
+  	var id_token = req.headers['idtoken'];
+	  var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ id_token;
+    https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         //console.log('statusCodeGoogle:', resposta.statusCode);
-        let dados = JSON.parse(d);
-        console.log(dados);
+				let gData = JSON.parse(d);
+				console.log(gData);
         if(resposta.statusCode==200){
-          Usuario.where({usuIdGoogle: dados['sub']})
+          Usuario.where({usuIdGoogle: gData['sub']})
           .fetch()
           .then(function (user) {
             if(user){
