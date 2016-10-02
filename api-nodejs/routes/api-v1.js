@@ -29,6 +29,6 @@ router.post('/enderecos', usuarios.validaToken, enderecos.post);
 
 /*USUARIO*/
 router.get('/usuario/login', usuarios.login);
-router.put('/usuario/update/:id', usuarios.update);
+router.get('/usuario/update/:id', usuarios.update);
 // router.post('/usuario/sigin', validaToken, enderecos.get);
 module.exports = router;

@@ -1,11 +1,13 @@
 var Usuario = require('../models/Usuario');
+var Notificacoes = require('../controls/NotificacoesController');
 const https = require('https');
 
 module.exports = {
   //login: getUsuarioByGoogleId,
   login: login,
   validaToken: validaToken,
-	update: update
+  update: update,
+  getTokenFcm: getTokenFcm
 };
 
 function getUsuarioByGoogleId(googleId) {
@@ -36,12 +38,13 @@ function newUsuario(dados, req, res, next){
 
 function updateUsuario(dados, req, res, next){
   console.log("Update: -----------------------------------------------------");
-	//console.log(dados);
+  //console.log(dados);
 
   Usuario.forge({usuCodigo: dados['usuCodigo']})
   .save(dados)
   .then(function (usuario) {
     //console.log(usuario);
+    Notificacoes.enviaNotificacao(usuario['usuIdGoogle'], 'Agora sim hein!');
     res.status(200).json({error: false, data: "Usuário alterado!"});
   })
   .catch(function (err) {
@@ -58,7 +61,7 @@ function upsertUsuario(dados, req, res, next){
     if(user){
       usuario = user.toJSON();
       var id = usuario['usuCodigo'];
-      console.log("id: "+id);
+      //console.log("id: "+id);
       if(id){
         dados['usuCodigo'] = id;
         updateUsuario(dados, req, res, next);
@@ -74,23 +77,23 @@ function upsertUsuario(dados, req, res, next){
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next){
-	//console.log(req.headers);
+  //console.log(req.headers);
   try {
-  var id_token = req.headers['idtoken'];
-  var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ id_token;
+    var id_token = req.headers['idtoken'];
+    var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ id_token;
     https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         let gData = JSON.parse(d);
-				//console.log(gData);
+        //console.log(gData);
         if(resposta.statusCode==200){
           //console.log('statusCodeGoogle:', resposta.statusCode);
           var dados={
             usuIdGoogle: gData['sub'],
             usuNome:  gData['name'],
             usuEmail: gData['email'],
-            usuImagem: gData['picture']	
-          };          
-        	upsertUsuario(dados, req, res, next);
+            usuImagem: gData['picture']
+          };
+          upsertUsuario(dados, req, res, next);
         }
         else{
           console.log("Falha no get dados: "+ resposta.statusCode);
@@ -117,28 +120,24 @@ function login(req, res, next){
 }
 
 function update(req, res, next){
-	console.log("update");
-	console.log(request.body);
-return;
-	var id = req.params.id;
-	var dados={
-		usuIdGoogle: id,
-//		usuTokenFcm: 
-	};
-	upsertUsuario(dados, req, res, next);
+  var id = req.params.id;
+  var dados={
+    usuIdGoogle: id,
+    usuTokenFcm: req.query.usuTokenFcm
+  };
+  upsertUsuario(dados, req, res, next);
 }
 
 
 function validaToken(req, res, next) {
-	
   try {
-  	var id_token = req.headers['idtoken'];
-	  var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ id_token;
+    var id_token = req.headers['idtoken'];
+    var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+ id_token;
     https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         //console.log('statusCodeGoogle:', resposta.statusCode);
-				let gData = JSON.parse(d);
-				console.log(gData);
+        let gData = JSON.parse(d);
+        console.log(gData);
         if(resposta.statusCode==200){
           Usuario.where({usuIdGoogle: gData['sub']})
           .fetch()
@@ -178,4 +177,24 @@ function validaToken(req, res, next) {
       data: err.message
     });
   }
+}
+
+function getTokenFcm(usuIdGoogle, mensagem, next){
+  Usuario.where({usuIdGoogle: usuIdGoogle})
+  .fetch()
+  .then(function (user) {
+    // console.log(user);
+    if(user){
+      usuario = user.toJSON();
+      var tokenFcm = usuario['usuTokenFcm'];
+      if(tokenFcm){
+        next(tokenFcm);
+      }
+    }
+    else  res.status(500).json({error: true, data: 'Usuário não cadastrado'});
+  })
+  .catch(function (err) {
+    console.log(err.message);
+    res.status(500).json({error: true, data: err.message});
+  });
 }
