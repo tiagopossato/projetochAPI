@@ -6,8 +6,7 @@ module.exports = {
   //login: getUsuarioByGoogleId,
   login: login,
   validaToken: validaToken,
-  update: update,
-  getTokenFcm: getTokenFcm
+  update: update
 };
 
 function getUsuarioByGoogleId(googleId) {
@@ -44,7 +43,6 @@ function updateUsuario(dados, req, res, next){
   .save(dados)
   .then(function (usuario) {
     //console.log(usuario);
-    Notificacoes.enviaNotificacao(usuario['usuIdGoogle'], 'Agora sim hein!');
     res.status(200).json({error: false, data: "Usuário alterado!"});
   })
   .catch(function (err) {
@@ -126,8 +124,8 @@ function update(req, res, next){
     usuTokenFcm: req.query.usuTokenFcm
   };
   upsertUsuario(dados, req, res, next);
+  Notificacoes.enviaNotificacao(usuario['usuIdGoogle'], 'Todos os serviços funcionando!');
 }
-
 
 function validaToken(req, res, next) {
   try {
@@ -179,6 +177,7 @@ function validaToken(req, res, next) {
   }
 }
 
+/*
 function getTokenFcm(usuIdGoogle, mensagem, next){
   Usuario.where({usuIdGoogle: usuIdGoogle})
   .fetch()
@@ -198,3 +197,4 @@ function getTokenFcm(usuIdGoogle, mensagem, next){
     res.status(500).json({error: true, data: err.message});
   });
 }
+*/
