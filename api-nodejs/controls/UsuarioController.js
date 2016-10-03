@@ -121,7 +121,7 @@ function update(req, res, next){
   var id = req.params.id;
   var dados={
     usuIdGoogle: id,
-    usuTokenFcm: req.query.usuTokenFcm
+    usuTokenFcm: req.query['usuTokenFcm']
   };
   upsertUsuario(dados, req, res, next);
   Notificacoes.enviaNotificacao(usuario['usuIdGoogle'], 'Todos os serviços funcionando!');
