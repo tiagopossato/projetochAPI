@@ -86,10 +86,7 @@ function login(req, res, next){
         if(resposta.statusCode==200){
           //console.log('statusCodeGoogle:', resposta.statusCode);
           var dados={
-            usuIdGoogle: gData['sub'],
-            usuNome:  gData['name'],
-            usuEmail: gData['email'],
-            usuImagem: gData['picture']
+            usuIdGoogle: gData['sub']
           };
           upsertUsuario(dados, req, res, next);
         }

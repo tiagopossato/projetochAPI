@@ -6,9 +6,6 @@ let Endereco = require('../models/Endereco');
 /*`USUARIO`{
 	`usuCodigo`,
   `usuIdGoogle`,
-  `usuNome`,
-  `usuEmail`,
-  `usuImagem`,
   `endCodigo`,
   `usuEndVisivel`,
   `usuTelefone`,
