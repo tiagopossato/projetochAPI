@@ -25,15 +25,16 @@ function getUsuarioByGoogleId(googleId) {
 }
 
 function newUsuario(req, res, next) {
-  console.log("Novo Login: --------------------------------------------------");
   Usuario.forge({
       'usuIdGoogle': req.params.usuIdGoogle
     })
     .save()
     .then(function(usuario) {
       console.log("Novo Usuario: ---------------------------------------");
-      console.log(JSON.stringify(usuario));
-      return res.status(200).json({
+      usuario = usuario.toJSON();
+      // Notificacoes.enviaNotificacao(usuario['usuIdGoogle'],
+      //   'Cadastrado com sucesso!');
+      res.status(200).json({
         error: false,
         completarCadastro: true
       });
@@ -46,7 +47,7 @@ function newUsuario(req, res, next) {
         });
       }
       console.log(JSON.stringify(err));
-      return res.status(500).json({
+      res.status(500).json({
         error: true,
         data: err.message
       });
@@ -55,28 +56,24 @@ function newUsuario(req, res, next) {
 
 function updateUsuario(req, res, next) {
   console.log("Update: -----------------------------------------------------");
-  //console.log(JSON.stringify(req.query));
-  // var endereco = req.query['endereco'];
-  // var usuario = req.query['usuario'];
-  //
-  // console.log('req.params.usuCodigo:' + req.params.usuCodigo);
-  // return res.status(444).json({
-  //   error: false,
-  //   data: "Usuário alterado!"
-  // });
-
   if (req.query['endereco']) {
     Endereco.novo(req, res, function(req, res) {
       var endereco = req.params.endereco.toJSON();
-      console.log('req.params.endereco: ' + endereco['endCodigo']);
+      // console.log('req.params.endereco: ' + endereco['endCodigo']);
       var usuario = req.query['usuario'];
       usuario['endCodigo'] = endereco['endCodigo'];
-      console.log("Novos dados do Usuario: \n" + JSON.stringify(usuario));
+      //console.log("Novos dados do Usuario: \n" + JSON.stringify(usuario));
+      //Endereco.apaga();
+      //console.log('usuCodigo:' + req.params.usuCodigo);
       Usuario.forge({
           'usuCodigo': req.params.usuCodigo
         })
         .save(usuario)
-        .then(function(usuario) {
+        .then(function(user) {
+          //console.log('usuCodigo:' + req.params.usuCodigo);
+          //console.log('req.params: ' + JSON.stringify(req.params));
+          Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
+            'Alterado com sucesso!');
           res.status(200).json({
             error: false,
             data: "Usuário alterado!"
@@ -91,11 +88,33 @@ function updateUsuario(req, res, next) {
         });
     });
   }
-  //
-  // if (usuario) {
-  //   console.log(usuario);
-  // }
 
+  var usuario = req.query['usuario'];
+  if (usuario) {
+    console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
+    Usuario.forge({
+        'usuCodigo': req.params.usuCodigo
+      })
+      .save(usuario)
+      .then(function(user) {
+        var usuario = user.toJSON();
+        //console.log('usuCodigo:' + req.params.usuCodigo);
+        console.log('usuario: ' + JSON.stringify(usuario));
+        Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
+          'Alterado com sucesso!');
+        res.status(200).json({
+          error: false,
+          data: "Usuário alterado!"
+        });
+      })
+      .catch(function(err) {
+        console.log("Erro no Update Usuario: " + JSON.stringify(err));
+        res.status(500).json({
+          error: true,
+          data: err.message
+        });
+      });
+  }
 }
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
@@ -135,12 +154,6 @@ function login(req, res, next) {
   }
 }
 
-function update(req, res, usuCodigo) {
-
-  Notificacoes.enviaNotificacao(usuario['usuIdGoogle'],
-    'Todos os serviços funcionando!');
-}
-
 /**
 Método que valida o token recebido no cabeçalho da requisição.
 
@@ -159,6 +172,7 @@ function validaToken(req, res, next) {
       resposta.on('data', (d) => {
         // console.log('statusCodeGoogle:', resposta.statusCode);
         let gData = JSON.parse(d);
+        req.params.usuIdGoogle = gData['sub'];
         //console.log(gData);
         if (resposta.statusCode === 200) {
           Usuario.where({

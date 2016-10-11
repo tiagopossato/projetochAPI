@@ -22,7 +22,7 @@ body: 'Body of your push notification'
 }
 };
 */
-function enviaNotificacao(idGoogle, msg){
+function enviaNotificacao(idGoogle, msg) {
   var mensagem = {
     //collapse_key: 'your_collapse_key',
     // data: {
@@ -34,30 +34,34 @@ function enviaNotificacao(idGoogle, msg){
     }
   };
   //console.log(mensagem);
-  try{
-    Usuario.where({usuIdGoogle: idGoogle})
-    .fetch()
-    .then(function (user) {
-      //console.log(user.toJSON());
-      if(user){
-        usuario = user.toJSON();
-        var tokenFcm = usuario['usuTokenFcm'];
-        if(tokenFcm){
-          mensagem['to'] = tokenFcm;
-          console.log(mensagem);
-          fcm.send(mensagem)
-          .then(function(response){
-            console.log("Successfully sent with response: ", response);
-          })
-          .catch(function(err){
-            console.log("Something has gone wrong!");
-            console.error(err);
-          });
+  try {
+    Usuario.where({
+        usuIdGoogle: idGoogle
+      })
+      .fetch()
+      .then(function(user) {
+        //console.log(user.toJSON());
+        if (user) {
+          usuario = user.toJSON();
+          var tokenFcm = usuario['usuTokenFcm'];
+          if (tokenFcm) {
+            mensagem['to'] = tokenFcm;
+            //console.log(mensagem);
+            fcm.send(mensagem)
+              .then(function(response) {
+                console.log("Mensagem enviada: " + response);
+              })
+              .catch(function(err) {
+                console.log("Something has gone wrong!");
+                console.error(err);
+              });
+          }
         }
-      }
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  }catch(err){console.log(err);}
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+  }
 }

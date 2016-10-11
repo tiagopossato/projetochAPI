@@ -6,7 +6,8 @@ let Endereco = require('../models/Endereco');
 module.exports = {
   //get: getEnderecos,
   getById: getEnderecoById,
-  novo: novoEndereco
+  novo: novoEndereco,
+  apaga: apagaEndereco
 };
 
 function getEnderecos(req, res) {
@@ -78,5 +79,39 @@ function novoEndereco(req, res, callback) {
         error: true,
         data: err.message
       });
+    });
+}
+
+function apagaEndereco() {
+
+  banco("ENDERECO")
+    .del()
+    .where({
+
+    })
+    .then(function(count) {
+      console.log(count);
+    }).finally(function() {
+      //banco.destroy();
+    });
+  return;
+
+  Endereco.forge({
+      'endCodigo': endCodigo
+    })
+    .fetch()
+    .then(function(endereco) {
+      endereco.destroy()
+        .then(function() {
+          console.log('Endereco apagado com sucesso!');
+        })
+        .catch(function(err) {
+          console.log('Endereco não pode ser apagado: \n' + console.log(
+            JSON.stringify(err)));
+        });
+    })
+    .catch(function(err) {
+      console.log('Apaga endereco: \n' + console.log(
+        JSON.stringify(err)));
     });
 }
