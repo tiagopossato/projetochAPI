@@ -30,7 +30,7 @@ function newUsuario(req, res, next) {
     })
     .save()
     .then(function(usuario) {
-      console.log("Novo Usuario: ---------------------------------------");
+      console.log("\t-> Novo Usuario");
       usuario = usuario.toJSON();
       // Notificacoes.enviaNotificacao(usuario['usuIdGoogle'],
       //   'Cadastrado com sucesso!');
@@ -46,7 +46,7 @@ function newUsuario(req, res, next) {
           error: false
         });
       }
-      console.log(JSON.stringify(err));
+      console.log('newUsuario: ' + JSON.stringify(err));
       res.status(500).json({
         error: true,
         data: err.message
@@ -55,13 +55,17 @@ function newUsuario(req, res, next) {
 }
 
 function updateUsuario(req, res, next) {
-  console.log("Update: -----------------------------------------------------");
+  console.log("\t-> Update");
+  //caso receber um endereço junto com os dados do usuario
+  //altera o endereco e o usuario
   if (req.query['endereco']) {
+    console.error(req.query['endereco']);
     Endereco.novo(req, res, function(req, res) {
       var endereco = req.params.endereco.toJSON();
       // console.log('req.params.endereco: ' + endereco['endCodigo']);
       var usuario = req.query['usuario'];
       usuario['endCodigo'] = endereco['endCodigo'];
+      console.error(req.query['usuario']);
       //console.log("Novos dados do Usuario: \n" + JSON.stringify(usuario));
       //Endereco.apaga();
       //console.log('usuCodigo:' + req.params.usuCodigo);
@@ -88,37 +92,41 @@ function updateUsuario(req, res, next) {
         });
     });
   }
-
-  var usuario = req.query['usuario'];
-  if (usuario) {
-    console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
-    Usuario.forge({
-        'usuCodigo': req.params.usuCodigo
-      })
-      .save(usuario)
-      .then(function(user) {
-        var usuario = user.toJSON();
-        //console.log('usuCodigo:' + req.params.usuCodigo);
-        console.log('usuario: ' + JSON.stringify(usuario));
-        Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
-          'Alterado com sucesso!');
-        res.status(200).json({
-          error: false,
-          data: "Usuário alterado!"
+  //caso nao receber o endereco, altera somente o usuario
+  else {
+    //verifica se os dados enviados existem
+    if (req.query['usuario']) {
+      console.error(req.query['usuario']);
+      // console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
+      Usuario.forge({
+          'usuCodigo': req.params.usuCodigo
+        })
+        .save(req.query['usuario'])
+        .then(function(user) {
+          var usuario = user.toJSON();
+          //console.log('usuCodigo:' + req.params.usuCodigo);
+          console.log('usuario: ' + JSON.stringify(usuario));
+          Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
+            'Alterado com sucesso!');
+          res.status(200).json({
+            error: false,
+            data: "Usuário alterado!"
+          });
+        })
+        .catch(function(err) {
+          console.log("Erro no Update Usuario: " + JSON.stringify(err));
+          res.status(500).json({
+            error: true,
+            data: err.message
+          });
         });
-      })
-      .catch(function(err) {
-        console.log("Erro no Update Usuario: " + JSON.stringify(err));
-        res.status(500).json({
-          error: true,
-          data: err.message
-        });
-      });
+    }
   }
 }
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next) {
+  console.log("------------------Login----------------------");
   try {
     var id_token = req.headers['idtoken'];
     var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' +
@@ -163,7 +171,7 @@ no banco de dados.
   ->Caso nao estiver cadastrado, retorna mensagem que necessita de cadastro.
 */
 function validaToken(req, res, next) {
-  console.log('validaToken');
+  console.log("------------------validaToken----------------");
   try {
     var id_token = req.headers['idtoken'];
     var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' +
