@@ -1,8 +1,11 @@
 var express = require('express');
+var multer = require('multer'); // v1.0.5
+var upload = multer(); // for parsing multipart/form-data
+
 var cidades = require('../controls/CidadeController');
 var enderecos = require('../controls/EnderecoController');
 var usuarios = require('../controls/UsuarioController');
-const https = require('https');
+
 
 var router = express.Router();
 
@@ -16,7 +19,7 @@ router.use(function(req, res, next) {
 /*USUARIO*/
 //LOGIN, não usa midleware para validar o token, porém valida internamente
 router.get('/usuario/login', usuarios.login);
-router.get('/usuario/update/me', usuarios.validaToken, usuarios.update);
+router.post('/usuario/update/me', upload.array(), usuarios.validaToken, usuarios.update);
 
 /*CIDADES*/
 // router.get('/cidades', usuarios.validaToken, cidades.get);

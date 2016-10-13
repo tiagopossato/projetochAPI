@@ -56,16 +56,23 @@ function newUsuario(req, res, next) {
 
 function updateUsuario(req, res, next) {
   console.log("\t-> Update");
+console.log(req.body);
+	//var endereco = req.body['endereco'];
+	var usuario = req.body.toJSON();
+
+//console.error("endereco:"+endereco);
+
+console.log("usuario:"+usuario);
+
   //caso receber um endereço junto com os dados do usuario
   //altera o endereco e o usuario
-  if (req.query['endereco']) {
-    console.error(req.query['endereco']);
+  if (endereco) {
     Endereco.novo(req, res, function(req, res) {
       var endereco = req.params.endereco.toJSON();
       // console.log('req.params.endereco: ' + endereco['endCodigo']);
-      var usuario = req.query['usuario'];
+      var usuario = req.body['usuario'];
       usuario['endCodigo'] = endereco['endCodigo'];
-      console.error(req.query['usuario']);
+      //console.error(req.body['usuario']);
       //console.log("Novos dados do Usuario: \n" + JSON.stringify(usuario));
       //Endereco.apaga();
       //console.log('usuCodigo:' + req.params.usuCodigo);
@@ -95,13 +102,12 @@ function updateUsuario(req, res, next) {
   //caso nao receber o endereco, altera somente o usuario
   else {
     //verifica se os dados enviados existem
-    if (req.query['usuario']) {
-      console.error(req.query['usuario']);
+    if (usuario) {
       // console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
       Usuario.forge({
           'usuCodigo': req.params.usuCodigo
         })
-        .save(req.query['usuario'])
+        .save(usuario)
         .then(function(user) {
           var usuario = user.toJSON();
           //console.log('usuCodigo:' + req.params.usuCodigo);
@@ -121,7 +127,11 @@ function updateUsuario(req, res, next) {
           });
         });
     }
-  }
+}
+res.status(500).json({
+            error: true,
+            data: "Nenhum dado encontrado"
+          });
 }
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
@@ -174,6 +184,12 @@ function validaToken(req, res, next) {
   console.log("------------------validaToken----------------");
   try {
     var id_token = req.headers['idtoken'];
+	if(id_token===undefined){
+                return res.status(500).json({
+                  error: true,
+                  data: "É preciso fazer login para acessar esta área!"
+                });
+}
     var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' +
       id_token;
     https.get(url, (resposta) => {
@@ -209,7 +225,7 @@ function validaToken(req, res, next) {
           //console.log(dados['error_description']);
           res.status(resposta.statusCode).json({
             error: true,
-            data: dados['error_description']
+            data: d['error_description']
           });
         }
       });
@@ -223,7 +239,7 @@ function validaToken(req, res, next) {
   } catch (err) {
     res.status(500).json({
       error: true,
-      data: err.message
+      data: err
     });
   }
 }
