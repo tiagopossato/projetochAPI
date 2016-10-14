@@ -15,7 +15,9 @@ function getUsuario(req, res, next) {
   Usuario.where({
       usuIdGoogle: req.params.usuIdGoogle
     })
-    .fetch({withRelated: ['endereco']})
+    .fetch({
+      withRelated: ['endereco']
+    })
     .then(function(usuario) {
       usuario = usuario.toJSON();
       console.log(usuario);
@@ -46,7 +48,10 @@ function newUsuario(req, res, next) {
     .catch(function(err) {
       if (err.code === 'ER_DUP_ENTRY') {
         //usuario já cadastrado, não é um erro
-        getUsuario(req, res, next);
+        // getUsuario(req, res, next);
+        return res.status(200).json({
+          error: false
+        });
       }
       console.log('newUsuario: ' + JSON.stringify(err));
       res.status(500).json({
