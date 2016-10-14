@@ -15,7 +15,7 @@ function getUsuario(req, res, next) {
   Usuario.where({
       usuIdGoogle: req.params.usuIdGoogle
     })
-    .fetch()
+    .fetch({withRelated: ['endereco']})
     .then(function(usuario) {
       usuario = usuario.toJSON();
       console.log(usuario);

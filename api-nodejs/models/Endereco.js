@@ -11,7 +11,7 @@ let Endereco = bookshelf.Model.extend({
 	idAttribute: 'endCodigo',
 	hidden: ['endUpdatedAt', 'endCreatedAt'],
 	usuario: function() {
-		return this.belongsTo(Usuario);
+		return this.belongsTo(Usuario, 'endCodigo');
 	}
 
 	// cidade: function() {
