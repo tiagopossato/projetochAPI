@@ -63,9 +63,9 @@ function newUsuario(req, res, next) {
 
 function updateUsuario(req, res, next) {
   console.log("\t-> Update");
-  console.log(req.body);
-  //var endereco = req.body['endereco'];
-  var usuario = req.body.toJSON();
+  console.log(req.query);
+  var endereco = req.query['endereco'];
+  var usuario = req.query['usuario'];
 
   //console.error("endereco:"+endereco);
 
@@ -77,7 +77,7 @@ function updateUsuario(req, res, next) {
     Endereco.novo(req, res, function(req, res) {
       var endereco = req.params.endereco.toJSON();
       // console.log('req.params.endereco: ' + endereco['endCodigo']);
-      var usuario = req.body['usuario'];
+      var usuario = req.query['usuario'];
       usuario['endCodigo'] = endereco['endCodigo'];
       //console.error(req.body['usuario']);
       //console.log("Novos dados do Usuario: \n" + JSON.stringify(usuario));

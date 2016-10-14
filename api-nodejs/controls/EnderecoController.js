@@ -62,10 +62,10 @@ parâmetros da requisicao
 */
 function novoEndereco(req, res, callback) {
   // var data = moment().tz("America/Sao_Paulo").format();
-  var dados = req.body['endereco'];
+  var dados = req.query['endereco'];
   if (!dados) {
     console.log(
-      'novoEndereco: dados não definidos, verifique se estão vindo via req.body!'
+      'novoEndereco: dados não definidos, verifique se estão vindo via req.query!'
     );
   }
   Endereco.forge(dados)
