@@ -10,14 +10,18 @@ module.exports = {
   update: updateUsuario
 };
 
-function getUsuarioByGoogleId(googleId) {
+function getUsuario(req, res, next) {
   // Grab data from the URL parameters
   Usuario.where({
-      usuIdGoogle: googleId
+      usuIdGoogle: req.params.usuIdGoogle
     })
     .fetch()
     .then(function(usuario) {
+      usuario = usuario.toJSON();
       console.log(usuario);
+      return res.status(200).json({
+        error: false
+      });
     })
     .catch(function(err) {
       console.log(err.message);
@@ -31,7 +35,7 @@ function newUsuario(req, res, next) {
     .save()
     .then(function(usuario) {
       console.log("\t-> Novo Usuario");
-      usuario = usuario.toJSON();
+      // usuario = usuario.toJSON();
       // Notificacoes.enviaNotificacao(usuario['usuIdGoogle'],
       //   'Cadastrado com sucesso!');
       res.status(200).json({
@@ -42,9 +46,7 @@ function newUsuario(req, res, next) {
     .catch(function(err) {
       if (err.code === 'ER_DUP_ENTRY') {
         //usuario já cadastrado, não é um erro
-        return res.status(200).json({
-          error: false
-        });
+        getUsuario(req, res, next);
       }
       console.log('newUsuario: ' + JSON.stringify(err));
       res.status(500).json({
@@ -56,13 +58,13 @@ function newUsuario(req, res, next) {
 
 function updateUsuario(req, res, next) {
   console.log("\t-> Update");
-console.log(req.body);
-	//var endereco = req.body['endereco'];
-	var usuario = req.body.toJSON();
+  console.log(req.body);
+  //var endereco = req.body['endereco'];
+  var usuario = req.body.toJSON();
 
-//console.error("endereco:"+endereco);
+  //console.error("endereco:"+endereco);
 
-console.log("usuario:"+usuario);
+  console.log("usuario:" + usuario);
 
   //caso receber um endereço junto com os dados do usuario
   //altera o endereco e o usuario
@@ -127,11 +129,11 @@ console.log("usuario:"+usuario);
           });
         });
     }
-}
-res.status(500).json({
-            error: true,
-            data: "Nenhum dado encontrado"
-          });
+  }
+  res.status(500).json({
+    error: true,
+    data: "Nenhum dado encontrado"
+  });
 }
 
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
@@ -184,12 +186,12 @@ function validaToken(req, res, next) {
   console.log("------------------validaToken----------------");
   try {
     var id_token = req.headers['idtoken'];
-	if(id_token===undefined){
-                return res.status(500).json({
-                  error: true,
-                  data: "É preciso fazer login para acessar esta área!"
-                });
-}
+    if (id_token === undefined) {
+      return res.status(500).json({
+        error: true,
+        data: "É preciso fazer login para acessar esta área!"
+      });
+    }
     var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' +
       id_token;
     https.get(url, (resposta) => {
