@@ -107,7 +107,7 @@ function updateUsuario(req, res, next) {
     });
   }
   //caso nao receber o endereco, altera somente o usuario
-  else {
+  else 
     //verifica se os dados enviados existem
     if (usuario) {
       // console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
@@ -134,13 +134,14 @@ function updateUsuario(req, res, next) {
           });
         });
     }
-  }
+else{
+  
   res.status(500).json({
     error: true,
     data: "Nenhum dado encontrado"
   });
 }
-
+}
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next) {
   console.log("------------------Login----------------------");
