@@ -19,7 +19,8 @@ router.use(function(req, res, next) {
 /*USUARIO*/
 //LOGIN, não usa midleware para validar o token, porém valida internamente
 router.get('/usuario/login', usuarios.login);
-router.post('/usuario/update/me', upload.array(), usuarios.validaToken, usuarios.update);
+router.get('/usuario/update/me', upload.array(), usuarios.validaToken, usuarios
+  .update);
 
 /*CIDADES*/
 // router.get('/cidades', usuarios.validaToken, cidades.get);
