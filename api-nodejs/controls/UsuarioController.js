@@ -1,5 +1,5 @@
-var Usuario = require('../models/Usuario');
-var Notificacoes = require('../controls/NotificacoesController');
+var usuModel = require('../models/Usuario');
+//var Notificacoes = require('../controls/NotificacoesController');
 var Endereco = require('../controls/EnderecoController');
 const https = require('https');
 
@@ -11,19 +11,62 @@ module.exports = {
 };
 
 function getUsuario(req, res, next) {
-  // Grab data from the URL parameters
-  Usuario.where({
-      usuIdGoogle: req.params.usuIdGoogle
+  usuModel.UsuarioView.where({
+      'usuIdGoogle': req.params.usuIdGoogle
     })
-    .fetch({
-      withRelated: ['endereco']
-    })
-    .then(function(usuario) {
-      usuario = usuario.toJSON();
-      console.log(usuario);
-      return res.status(200).json({
-        error: false
-      });
+    .fetch()
+    .then(function(user) {
+      if (user) {
+        var resposta = user.toJSON();
+        var usuario = {
+          usuEndVisivel: resposta.usuEndVisivel,
+          usuTelefone: resposta.usuTelefone,
+          usuTelefoneVisivel: resposta.usuTelefoneVisivel
+        };
+        var endereco = {
+          endCep: resposta.endCep,
+          endLogradouro: resposta.endLogradouro,
+          endBairro: resposta.endBairro,
+          endNumero: resposta.endNumero,
+          cidCodigo: resposta.cidCodigo,
+          ufCodigo: resposta.ufCodigo,
+          endLatitude: resposta.endLatitude,
+          endLongitude: resposta.endLongitude
+        };
+        //      console.log({usuario,endereco});
+        return res.status(200).json({
+          error: false,
+          data: {
+            usuario,
+            endereco
+          }
+        });
+      } else {
+        usuModel.Usuario.where({
+            'usuIdGoogle': req.params.usuIdGoogle
+          })
+          .fetch()
+          .then(function(user) {
+            if (user) {
+              var resposta = user.toJSON();
+              var usuario = {
+                usuEndVisivel: resposta.usuEndVisivel,
+                usuTelefone: resposta.usuTelefone,
+                usuTelefoneVisivel: resposta.usuTelefoneVisivel
+              };
+              return res.status(200).json({
+                error: false,
+                data: {
+                  usuario,
+                  completarCadastro: true
+                }
+              });
+            }
+          })
+          .catch(function(err) {
+            console.log(err.message);
+          });
+      }
     })
     .catch(function(err) {
       console.log(err.message);
@@ -31,7 +74,7 @@ function getUsuario(req, res, next) {
 }
 
 function newUsuario(req, res, next) {
-  Usuario.forge({
+  usuModel.Usuario.forge({
       'usuIdGoogle': req.params.usuIdGoogle
     })
     .save()
@@ -42,16 +85,16 @@ function newUsuario(req, res, next) {
       //   'Cadastrado com sucesso!');
       res.status(200).json({
         error: false,
-        completarCadastro: true
+        data: {
+		completarCadastro: true
+	}
       });
     })
     .catch(function(err) {
       if (err.code === 'ER_DUP_ENTRY') {
         //usuario já cadastrado, não é um erro
-        // getUsuario(req, res, next);
-        return res.status(200).json({
-          error: false
-        });
+        getUsuario(req, res, next);
+        return;
       }
       console.log('newUsuario: ' + JSON.stringify(err));
       res.status(500).json({
@@ -63,14 +106,11 @@ function newUsuario(req, res, next) {
 
 function updateUsuario(req, res, next) {
   console.log("\t-> Update");
-  console.log(req.query);
+  //console.log(req.query);
   var endereco = req.query['endereco'];
   var usuario = req.query['usuario'];
-
-  //console.error("endereco:"+endereco);
-
-  console.log("usuario:" + usuario);
-
+  console.log("endereco:"+JSON.stringify(endereco));
+  //console.log("usuario:" + usuario);
   //caso receber um endereço junto com os dados do usuario
   //altera o endereco e o usuario
   if (endereco) {
@@ -83,15 +123,15 @@ function updateUsuario(req, res, next) {
       //console.log("Novos dados do Usuario: \n" + JSON.stringify(usuario));
       //Endereco.apaga();
       //console.log('usuCodigo:' + req.params.usuCodigo);
-      Usuario.forge({
+      usuModel.Usuario.forge({
           'usuCodigo': req.params.usuCodigo
         })
         .save(usuario)
         .then(function(user) {
           //console.log('usuCodigo:' + req.params.usuCodigo);
           //console.log('req.params: ' + JSON.stringify(req.params));
-          Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
-            'Alterado com sucesso!');
+          //Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
+          //  'Alterado com sucesso!');
           res.status(200).json({
             error: false,
             data: "Usuário alterado!"
@@ -107,40 +147,39 @@ function updateUsuario(req, res, next) {
     });
   }
   //caso nao receber o endereco, altera somente o usuario
-  else 
-    //verifica se os dados enviados existem
-    if (usuario) {
-      // console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
-      Usuario.forge({
-          'usuCodigo': req.params.usuCodigo
-        })
-        .save(usuario)
-        .then(function(user) {
-          var usuario = user.toJSON();
-          //console.log('usuCodigo:' + req.params.usuCodigo);
-          console.log('usuario: ' + JSON.stringify(usuario));
-          Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
-            'Alterado com sucesso!');
-          res.status(200).json({
-            error: false,
-            data: "Usuário alterado!"
-          });
-        })
-        .catch(function(err) {
-          console.log("Erro no Update Usuario: " + JSON.stringify(err));
-          res.status(500).json({
-            error: true,
-            data: err.message
-          });
+  else
+  //verifica se os dados enviados existem
+  if (usuario) {
+    // console.log("Novos dados do Usuario:" + JSON.stringify(usuario));
+    usuModel.Usuario.forge({
+        'usuCodigo': req.params.usuCodigo
+      })
+      .save(usuario)
+      .then(function(user) {
+        var usuario = user.toJSON();
+        //console.log('usuCodigo:' + req.params.usuCodigo);
+        console.log('usuario: ' + JSON.stringify(usuario));
+        //Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
+        //  'Alterado com sucesso!');
+        res.status(200).json({
+          error: false,
+          data: "Usuário alterado!"
         });
-    }
-else{
-  
-  res.status(500).json({
-    error: true,
-    data: "Nenhum dado encontrado"
-  });
-}
+      })
+      .catch(function(err) {
+        console.log("Erro no Update Usuario: " + JSON.stringify(err));
+        res.status(500).json({
+          error: true,
+          data: err.message
+        });
+      });
+  } else {
+
+    res.status(500).json({
+      error: true,
+      data: "Nenhum dado encontrado"
+    });
+  }
 }
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next) {
@@ -207,7 +246,7 @@ function validaToken(req, res, next) {
         req.params.usuIdGoogle = gData['sub'];
         //console.log(gData);
         if (resposta.statusCode === 200) {
-          Usuario.where({
+          usuModel.Usuario.where({
               'usuIdGoogle': gData['sub']
             })
             .fetch()

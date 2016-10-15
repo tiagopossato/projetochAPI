@@ -24,8 +24,15 @@ let Usuario = bookshelf.Model.extend({
 	}
 });
 
+let UsuarioView = bookshelf.Model.extend({
+	tableName: 'USUARIO_VIEW',
+	hidden: ['usuCodigo']
+});
+
 //let Cidades = bookshelf.Collection.extend({
 //  model: Cidade
 //});
 
-module.exports = Usuario;
+module.exports = {
+	Usuario, UsuarioView
+};

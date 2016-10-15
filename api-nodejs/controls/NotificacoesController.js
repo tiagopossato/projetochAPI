@@ -1,4 +1,4 @@
-var Usuario = require('../models/Usuario');
+var usuModel = require('../models/Usuario');
 const https = require('https');
 var API_SERVER_KEY = 'AIzaSyBGyQuDbo6cZTS1ZpTVvfKKZlhgfcbddvo';
 
@@ -28,13 +28,14 @@ function enviaNotificacao(idGoogle, msg) {
     // data: {
     //     your_custom_data_key: 'your_custom_data_value'
     // },
+    //delay_while_idle : true,
     notification: {
       title: 'Aplicativo HortApp',
       body: msg
     }
   };
   //console.log(mensagem);
-  Usuario.where({
+  usuModel.Usuario.where({
       usuIdGoogle: idGoogle
     })
     .fetch()
