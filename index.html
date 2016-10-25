@@ -296,6 +296,20 @@
 			e.preventDefault();
 		}
 
+		function leOfertas() {
+			$.ajax({
+				url: 'http://localhost:3000/v1/ofertas',
+				dataType: "json",				
+				success: function(dados){
+					console.log(dados.data)
+					},
+				error: function(err){
+					console.log("Erro: "+ err);
+				}
+			});
+		}
+
+
 			$('#formCadastro').submit(enviaCadastro);
 			$('#formEndereco').submit(enviaEndereco);
 			//leCidades();

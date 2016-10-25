@@ -2,9 +2,10 @@ var express = require('express');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 
-var cidades = require('../controls/CidadeController');
-var enderecos = require('../controls/EnderecoController');
+// var cidades = require('../controls/CidadeController');
+// var enderecos = require('../controls/EnderecoController');
 var usuarios = require('../controls/UsuarioController');
+var ofertas = require('../controls/OfertaController');
 
 
 var router = express.Router();
@@ -21,6 +22,9 @@ router.use(function(req, res, next) {
 router.get('/usuario/login', usuarios.login);
 router.get('/usuario/update/me', upload.array(), usuarios.validaToken, usuarios
   .update);
+
+router.get('/ofertas', /*usuarios.validaToken,*/ ofertas.get);
+router.get('/ofertas/:id', /*usuarios.validaToken,*/ ofertas.getById);
 
 /*CIDADES*/
 // router.get('/cidades', usuarios.validaToken, cidades.get);
