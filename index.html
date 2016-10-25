@@ -286,7 +286,6 @@
 				data: dados,
 				}).done(function(resposta) {
 					console.log(resposta);
-
 				}).fail(function(jqXHR, textStatus ) {
 					console.log("Request failed: " + textStatus);
 
@@ -297,14 +296,27 @@
 		}
 
 		function leOfertas() {
+			var preferencias =
+				{
+					//"distancia": "XX",
+					"dataVencimento": "31-10-2016",
+					"itens":[],
+					"offset":{"inicio":0, "qtd":20}
+				};
+
 			$.ajax({
 				url: 'http://localhost:3000/v1/ofertas',
-				dataType: "json",				
-				success: function(dados){
-					console.log(dados.data)
-					},
-				error: function(err){
-					console.log("Erro: "+ err);
+				// headers: {
+				// 	"idtoken": usuarioController.idToken
+				// },
+				data: preferencias,
+				type: "GET",
+				dataType: undefined,
+				success: function(data, status, xhr) {
+					console.log(data);
+				},
+				error: function(data, status, xhr) {
+					console.log("Erro: "+ data);
 				}
 			});
 		}

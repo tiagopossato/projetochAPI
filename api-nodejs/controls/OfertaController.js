@@ -10,10 +10,34 @@ module.exports = {
 };
 
 function getOfertas(req, res) {
+  var preferencias = req.query;
+  // if (preferencias == '') {
+  //   console.log('veio');
+  //
+  //   preferencias = {
+  //     //"distancia": "XX",
+  //     // "dataVencimento": "data",
+  //     "itens": [],
+  //     "offset": {
+  //       "inicio": 0,
+  //       "qtd": 2000000
+  //     }
+  //   };
+  // }
+  if (!preferencias.itens) preferencias.itens = [];
+
+  console.log(preferencias);
+  //ver http: //knexjs.org/#Raw-Queries
   banco('OFERTA')
     .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
     .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
       'OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
+    .whereIn('OFERTA.itmCodigo', preferencias.itens)
+    //.orWhereIn('OFERTA.itmCodigo', true)
+    .where('OFERTA.oftDataFinal', '<=',
+      preferencias.dataVencimento)
+    .limit(parseInt(preferencias.offset['qtd']))
+    .offset(parseInt(preferencias.offset['inicio']))
     .then(function(ofertas) {
       //			console.log(response);
       var quantidades = {};
@@ -32,10 +56,11 @@ function getOfertas(req, res) {
       });
     })
     .catch(function(error) {
+      console.log(error.message);
       res.status(500).json({
         error: true,
         data: {
-          message: err.message
+          message: error.message
         }
       });
     });
@@ -56,7 +81,7 @@ function getOfertasById(req, res) {
       'ENDERECO.endLatitude',
       'ENDERECO.endLongitude')
     .then(function(response) {
-      console.log(response);
+      //console.log(response);
       //deleta as propriedades nulas
       for (var k in response[0]) {
         console.log(k);
@@ -64,7 +89,6 @@ function getOfertasById(req, res) {
           delete response[0][k];
         }
       }
-
       res.status(200).json({
         error: false,
         data: response[0]
