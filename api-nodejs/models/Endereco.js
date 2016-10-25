@@ -13,10 +13,6 @@ let Endereco = bookshelf.Model.extend({
 	usuario: function() {
 		return this.belongsTo(Usuario, 'endCodigo');
 	}
-
-	// cidade: function() {
-	// 	return this.hasOne(Cidade, 'cidCodigo');
-	// },
 });
 
 //let Enderecos = bookshelf.Collection.extend({

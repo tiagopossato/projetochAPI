@@ -1,5 +1,6 @@
 var usuario = require('./models/Usuario');
 var Notificacoes = require('./controls/NotificacoesController');
+var banco = require('./models/banco');
 
 function getUsuario() {
   usuModel.UsuarioView.where({
@@ -70,7 +71,7 @@ function newUsuario() {
     .then(function(usuario) {
       console.log("\t-> Novo Usuario");
       // usuario = usuario.toJSON();
-       console.log('Cadastrado com sucesso!');      
+      console.log('Cadastrado com sucesso!');
     })
     .catch(function(err) {
       if (err.code === 'ER_DUP_ENTRY') {
@@ -78,9 +79,16 @@ function newUsuario() {
         getUsuario();
         return;
       }
-      console.log('newUsuario: ' + JSON.stringify(err));      
+      console.log('newUsuario: ' + JSON.stringify(err));
     });
 }
 
-Notificacoes.enviaNotificacao(106728186543816133633, 'Alterado com sucesso!');
-
+banco
+  .select('*')
+  .from('OFERTA')
+  .then(function(response) {
+    console.log(response.toJSON());
+  })
+  .catch(function(error) {
+    console.log(JSON.stringify(error));
+  });
