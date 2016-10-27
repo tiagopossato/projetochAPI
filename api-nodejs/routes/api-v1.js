@@ -20,11 +20,12 @@ router.use(function(req, res, next) {
 /*USUARIO*/
 //LOGIN, não usa midleware para validar o token, porém valida internamente
 router.get('/usuario/login', usuarios.login);
-router.get('/usuario/update/me', upload.array(), usuarios.validaToken, usuarios
-  .update);
+router.get('/usuario/update/me', upload.array(),
+  usuarios.validaToken, usuarios.update);
 
-router.get('/ofertas', /*usuarios.validaToken,*/ ofertas.get);
-router.get('/ofertas/:id', /*usuarios.validaToken,*/ ofertas.getById);
+router.get('/ofertas', usuarios.validaToken, ofertas.get);
+router.get('/ofertas/:id', usuarios.validaToken, ofertas.getById);
+router.get('/novaoferta', /*usuarios.validaToken,*/ ofertas.post);
 
 /*CIDADES*/
 // router.get('/cidades', usuarios.validaToken, cidades.get);

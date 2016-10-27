@@ -86,8 +86,8 @@ function newUsuario(req, res, next) {
       res.status(200).json({
         error: false,
         data: {
-		completarCadastro: true
-	}
+          completarCadastro: true
+        }
       });
     })
     .catch(function(err) {
@@ -105,16 +105,22 @@ function newUsuario(req, res, next) {
 }
 
 function updateUsuario(req, res, next) {
-  console.log("\t-> Update");
+  console.log("\t-> updateUsuario");
   //console.log(req.query);
   var endereco = req.query['endereco'];
   var usuario = req.query['usuario'];
-  console.log("endereco:"+JSON.stringify(endereco));
+  //console.log("endereco:" + JSON.stringify(endereco));
   //console.log("usuario:" + usuario);
   //caso receber um endereço junto com os dados do usuario
   //altera o endereco e o usuario
   if (endereco) {
-    Endereco.novo(req, res, function(req, res) {
+    var dados = req.query['endereco'];
+    if (!dados) {
+      console.log(
+        'novoEndereco: dados não definidos, verifique se estão vindo via req.query!'
+      );
+    }
+    Endereco.novo(dados, req, res, function(req, res) {
       var endereco = req.params.endereco.toJSON();
       // console.log('req.params.endereco: ' + endereco['endCodigo']);
       var usuario = req.query['usuario'];
@@ -181,6 +187,8 @@ function updateUsuario(req, res, next) {
     });
   }
 }
+
+
 /*É PRECISO HABILITAR A API DO GOOGLE+ NO CONSOLE DO GOOGLE*/
 function login(req, res, next) {
   console.log("------------------Login----------------------");

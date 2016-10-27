@@ -7,7 +7,8 @@ module.exports = {
   //get: getEnderecos,
   getById: getEnderecoById,
   novo: novoEndereco,
-  apaga: apagaEndereco
+  apaga: apagaEndereco,
+  verifica: verificaEndereco
 };
 
 function getEnderecos(req, res) {
@@ -40,6 +41,12 @@ function enderecoById(id, res) {
     })
     .fetch()
     .then(function(enderecos) {
+      //deleta as propriedades nulas
+      for (var k in enderecos || enderecos[k] == "") {
+        if (enderecos[k] == null) {
+          delete enderecos[k];
+        }
+      }
       res.status(200).json({
         error: false,
         data: enderecos.toJSON()
@@ -60,19 +67,13 @@ Recebe os objetos de requisição, resposta e a uma função de callback
 Cria um novo endereço e chama a função next, passando esse endereço como um dos
 parâmetros da requisicao
 */
-function novoEndereco(req, res, callback) {
+function novoEndereco(dados, req, res, next) {
   // var data = moment().tz("America/Sao_Paulo").format();
-  var dados = req.query['endereco'];
-  if (!dados) {
-    console.log(
-      'novoEndereco: dados não definidos, verifique se estão vindo via req.query!'
-    );
-  }
   Endereco.forge(dados)
     .save()
     .then(function(endereco) {
       req.params.endereco = endereco;
-      callback(req, res);
+      next(req, res);
     })
     .catch(function(err) {
       res.status(500).json({
@@ -83,12 +84,9 @@ function novoEndereco(req, res, callback) {
 }
 
 function apagaEndereco() {
-
   banco("ENDERECO")
     .del()
-    .where({
-
-    })
+    .where({})
     .then(function(count) {
       console.log(count);
     }).finally(function() {
@@ -113,5 +111,20 @@ function apagaEndereco() {
     .catch(function(err) {
       console.log('Apaga endereco: \n' + console.log(
         JSON.stringify(err)));
+    });
+}
+
+function verificaEndereco(id, req, res, valido, invalido) {
+  Endereco.where({
+      endCodigo: id
+    })
+    .fetch()
+    .then(function(enderecos) {
+      //console.log('Endereco Valido');
+      valido(req, res);
+    })
+    .catch(function(err) {
+      //console.log('Endereco invalido');
+      invalido(req, res);
     });
 }

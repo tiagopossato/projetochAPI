@@ -299,8 +299,8 @@
 			var preferencias =
 				{
 					//"distancia": "XX",
-					"dataVencimento": "31-10-2016",
-					"itens":[],
+					"dataVencimento": "31/10/2016",
+					"itens":[3],
 					"offset":{"inicio":0, "qtd":20}
 				};
 
@@ -309,9 +309,62 @@
 				// headers: {
 				// 	"idtoken": usuarioController.idToken
 				// },
-				data: preferencias,
+				//data: preferencias,
 				type: "GET",
 				dataType: undefined,
+				success: function(data, status, xhr) {
+					console.log(data);
+				},
+				error: function(data, status, xhr) {
+					console.log("Erro: "+ data);
+				}
+			});
+		}
+
+		var EnderecoModel = function(){
+		  this.endLogradouro= null;
+		  this.endBairro= null;
+		  this.endNumero= null;
+		  this.endCep= null;
+		  this.cidCodigo= null;
+		  this.ufCodigo= null;
+		  this.endLatitude= null;
+		  this.endLongitude= null;
+		};
+
+		var OfertaModel = function(){
+		  this.oftCodigo = null;
+		  this.usuCodigo = null;
+		  this.itmCodigo = null;
+		  this.oftQuantidade = null;
+		  this.oftValor = null;
+		  this.oftDataInicial = null;
+		  this.oftDataFinal = null;
+		  this.endCodigo = null;
+		  this.stsCodigo = null;
+		  this.oftObs = null;
+		  this.endereco = new EnderecoModel();
+		};
+
+		function novaOferta() {
+			var oferta = new OfertaModel();
+				oferta.usuCodigo = 371
+				oferta.itmCodigo = 45
+				oferta.oftQuantidade = 3
+				oferta.oftValor = 10.4
+				oferta.oftDataInicial = "10/26/2016"
+				oferta.oftDataFinal = "11/23/2016"
+				oferta.endCodigo = 387
+				oferta.stsCodigo = 1
+				oferta.oftObs = "";
+			$.ajax({
+				url: 'http://localhost:3000/v1/novaoferta',
+				// headers: {
+				// 	"idtoken": usuarioController.idToken
+				// },
+				data: oferta,
+				type: "GET",
+		        contentType: "application/json",
 				success: function(data, status, xhr) {
 					console.log(data);
 				},
