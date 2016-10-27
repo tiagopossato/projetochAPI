@@ -277,10 +277,10 @@ function validaToken(req, res, next) {
               });
             });
         } else {
-          //console.log(dados['error_description']);
+          console.log(gData);
           res.status(resposta.statusCode).json({
             error: true,
-            data: d['error_description']
+            data: gData['error_description']
           });
         }
       });

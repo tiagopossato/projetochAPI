@@ -306,9 +306,9 @@
 
 			$.ajax({
 				url: 'http://localhost:3000/v1/ofertas',
-				// headers: {
-				// 	"idtoken": usuarioController.idToken
-				// },
+					 headers: {
+				 	"idtoken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkxM2NhNzJiNmViYzQ1NWE1MTMyZDkzNGZjMzRhNmNiNGQ2YTJmMjMifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzc1NjY3OTYsImV4cCI6MTQ3NzU3MDM5NiwiYXVkIjoiNTE0NTUzMDE5MTE0LW02Mm1scmR0NWxlamRxNmg0bWFmZTFobTh2ZTRtOGtsLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA2NzI4MTg2NTQzODE2MTMzNjMzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjUxNDU1MzAxOTExNC0yb2dxam85czNqZjR2ODNta2JrcjYxNWY0bXBqY2djcy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiZXN0YWdpYXJpby5lbGV0cm9AZ21haWwuY29tIiwibmFtZSI6IlRpYWdvIGRlIG9saXZlaXJhIFBvc3NhdG8iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDYuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1ydVRNT2JKWUxEdy9BQUFBQUFBQUFBSS9BQUFBQUFBQUFpdy9IQk9TZHFERGdSUS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiVGlhZ28iLCJmYW1pbHlfbmFtZSI6ImRlIG9saXZlaXJhIFBvc3NhdG8iLCJsb2NhbGUiOiJwdCJ9.vUEKId4RxwvePoe7EV4uvtXe6wiLCO4B-Fa8pH9yRn8U33Bkag7eWx0IW6s5Ghcz3PFSex71C8r3_FV3IrJTRlicjOO7GGV0aqBitbZorG_5krHOI1ifRYxHdfcc0dFcoCNNsOzsSnGszjGxr5Y-deu67GyW7reUbxW0GGDCt0mCB-04BuIBpHHHcouW3bbmnYh9THBgTS3f1Mkol-7ZTx29wR5CTES9G0qQ0jlXrGdJiR59XflzFm4o5qkjA9BoKX9MOhR07z-LlL1RTakjmPA-aeOUrUNEDrgZl2yJqr9k8qQsXQErv_yF8CVbzLaCjYcetkkGOE50PjDvCDbG-A"
+				},
 				//data: preferencias,
 				type: "GET",
 				dataType: undefined,
@@ -346,22 +346,31 @@
 		  this.endereco = new EnderecoModel();
 		};
 
+		var oferta = new OfertaModel();
+
+		oferta.itmCodigo = 99;
+		oferta.oftQuantidade = 33;
+		oferta.oftValor = 0;
+		oferta.oftDataInicial = "2016-10-27";
+		oferta.oftDataFinal = "2016-11-20 12:00:00";
+		oferta.endCodigo = 405;
+		oferta.stsCodigo = 1;
+		oferta.oftObs = "";
+
+		oferta.endereco.endLogradouro = "Rua das Butiás";
+		oferta.endereco.endBairro = "Campo dos Palmeiras";
+		oferta.endereco.endNumero  = 123;
+		oferta.endereco.endCep = "88560000";
+		oferta.endereco.cidCodigo = 4219309;
+		oferta.endereco.ufCodigo = 42;
+
+
 		function novaOferta() {
-			var oferta = new OfertaModel();
-				oferta.usuCodigo = 371
-				oferta.itmCodigo = 45
-				oferta.oftQuantidade = 3
-				oferta.oftValor = 10.4
-				oferta.oftDataInicial = "10/26/2016"
-				oferta.oftDataFinal = "11/23/2016"
-				oferta.endCodigo = 387
-				oferta.stsCodigo = 1
-				oferta.oftObs = "";
 			$.ajax({
 				url: 'http://localhost:3000/v1/novaoferta',
-				// headers: {
-				// 	"idtoken": usuarioController.idToken
-				// },
+				 headers: {
+				 	"idtoken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkxM2NhNzJiNmViYzQ1NWE1MTMyZDkzNGZjMzRhNmNiNGQ2YTJmMjMifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzc1NjY3OTYsImV4cCI6MTQ3NzU3MDM5NiwiYXVkIjoiNTE0NTUzMDE5MTE0LW02Mm1scmR0NWxlamRxNmg0bWFmZTFobTh2ZTRtOGtsLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA2NzI4MTg2NTQzODE2MTMzNjMzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjUxNDU1MzAxOTExNC0yb2dxam85czNqZjR2ODNta2JrcjYxNWY0bXBqY2djcy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiZXN0YWdpYXJpby5lbGV0cm9AZ21haWwuY29tIiwibmFtZSI6IlRpYWdvIGRlIG9saXZlaXJhIFBvc3NhdG8iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDYuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1ydVRNT2JKWUxEdy9BQUFBQUFBQUFBSS9BQUFBQUFBQUFpdy9IQk9TZHFERGdSUS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiVGlhZ28iLCJmYW1pbHlfbmFtZSI6ImRlIG9saXZlaXJhIFBvc3NhdG8iLCJsb2NhbGUiOiJwdCJ9.vUEKId4RxwvePoe7EV4uvtXe6wiLCO4B-Fa8pH9yRn8U33Bkag7eWx0IW6s5Ghcz3PFSex71C8r3_FV3IrJTRlicjOO7GGV0aqBitbZorG_5krHOI1ifRYxHdfcc0dFcoCNNsOzsSnGszjGxr5Y-deu67GyW7reUbxW0GGDCt0mCB-04BuIBpHHHcouW3bbmnYh9THBgTS3f1Mkol-7ZTx29wR5CTES9G0qQ0jlXrGdJiR59XflzFm4o5qkjA9BoKX9MOhR07z-LlL1RTakjmPA-aeOUrUNEDrgZl2yJqr9k8qQsXQErv_yF8CVbzLaCjYcetkkGOE50PjDvCDbG-A"
+				},
 				data: oferta,
 				type: "GET",
 		        contentType: "application/json",
@@ -373,6 +382,32 @@
 				}
 			});
 		}
+
+
+		function updateOferta() {
+			oferta.oftCodigo = 14;
+			oferta.endCodigo = 405;
+			oferta.oftQuantidade = 6;
+			oferta.endereco.endBairro = "Bairro Floresta";
+
+			$.ajax({
+				url: 'http://localhost:3000/v1/alteraoferta',
+				 headers: {
+				 	"idtoken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkxM2NhNzJiNmViYzQ1NWE1MTMyZDkzNGZjMzRhNmNiNGQ2YTJmMjMifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzc1NjY3OTYsImV4cCI6MTQ3NzU3MDM5NiwiYXVkIjoiNTE0NTUzMDE5MTE0LW02Mm1scmR0NWxlamRxNmg0bWFmZTFobTh2ZTRtOGtsLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA2NzI4MTg2NTQzODE2MTMzNjMzIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjUxNDU1MzAxOTExNC0yb2dxam85czNqZjR2ODNta2JrcjYxNWY0bXBqY2djcy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiZXN0YWdpYXJpby5lbGV0cm9AZ21haWwuY29tIiwibmFtZSI6IlRpYWdvIGRlIG9saXZlaXJhIFBvc3NhdG8iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDYuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1ydVRNT2JKWUxEdy9BQUFBQUFBQUFBSS9BQUFBQUFBQUFpdy9IQk9TZHFERGdSUS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiVGlhZ28iLCJmYW1pbHlfbmFtZSI6ImRlIG9saXZlaXJhIFBvc3NhdG8iLCJsb2NhbGUiOiJwdCJ9.vUEKId4RxwvePoe7EV4uvtXe6wiLCO4B-Fa8pH9yRn8U33Bkag7eWx0IW6s5Ghcz3PFSex71C8r3_FV3IrJTRlicjOO7GGV0aqBitbZorG_5krHOI1ifRYxHdfcc0dFcoCNNsOzsSnGszjGxr5Y-deu67GyW7reUbxW0GGDCt0mCB-04BuIBpHHHcouW3bbmnYh9THBgTS3f1Mkol-7ZTx29wR5CTES9G0qQ0jlXrGdJiR59XflzFm4o5qkjA9BoKX9MOhR07z-LlL1RTakjmPA-aeOUrUNEDrgZl2yJqr9k8qQsXQErv_yF8CVbzLaCjYcetkkGOE50PjDvCDbG-A"
+				},
+				data: oferta,
+				type: "GET",
+		        contentType: "application/json",
+				success: function(data, status, xhr) {
+					console.log(data);
+				},
+				error: function(data, status, xhr) {
+					console.log("Erro: "+ JSON.stringify(data));
+				}
+			});
+		}
+
+
 
 
 			$('#formCadastro').submit(enviaCadastro);

@@ -8,6 +8,7 @@ module.exports = {
   getById: getEnderecoById,
   novo: novoEndereco,
   apaga: apagaEndereco,
+  update: updateEndereco,
   verifica: verificaEndereco
 };
 
@@ -114,17 +115,37 @@ function apagaEndereco() {
     });
 }
 
-function verificaEndereco(id, req, res, valido, invalido) {
+function verificaEndereco(id, req, res, callbackValido, callbackInvalido) {
   Endereco.where({
       endCodigo: id
     })
     .fetch()
     .then(function(enderecos) {
-      //console.log('Endereco Valido');
-      valido(req, res);
+      console.log(enderecos.toJSON());
+      console.log('Endereco Valido');
+      callbackValido(req, res);
     })
     .catch(function(err) {
-      //console.log('Endereco invalido');
-      invalido(req, res);
+      console.log('Endereco invalido');
+      callbackInvalido(req, res);
+    });
+}
+
+
+
+function updateEndereco(endereco, req, res, callback) {
+  Endereco.forge({
+      'endCodigo': endereco['endCodigo']
+    })
+    .save(endereco)
+    .then(function(enderecoAlterado) {
+      callback(req, res);
+    })
+    .catch(function(err) {
+      console.log("Erro no updateEndereco: " + JSON.stringify(err.message));
+      res.status(500).json({
+        error: true,
+        data: err.message
+      });
     });
 }

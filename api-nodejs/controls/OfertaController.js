@@ -1,18 +1,21 @@
 "use strict";
 let banco = require('../models/banco');
 let Oferta = require('../models/Oferta');
-var Endereco = require('../controls/EnderecoController');
+let Endereco = require('../controls/EnderecoController');
+let strtotime = require('strtotime');
+
 
 module.exports = {
   get: getOfertas,
   getById: getOfertasById,
-  post: novaOferta
-    // apaga: apagaEndereco
+  post: novaOferta,
+  put: updateOferta
 };
 
 function getOfertas(req, res) {
   var preferencias = req.query;
-  if (preferencias.dataVencimento == undefined) {
+  if (preferencias.dataVencimento == undefined ||
+    preferencias.offset == undefined) {
     preferencias = {
       //"distancia": "XX",
       "dataVencimento": "31/12/2080",
@@ -38,6 +41,7 @@ function getOfertas(req, res) {
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
         //			console.log(response);
+        //conta a quantidade de ofertas por usuário
         var quantidades = {};
         for (var i = 0; i < ofertas.length; i++) {
           if (!quantidades[ofertas[i]['usuIdGoogle']])
@@ -76,6 +80,7 @@ function getOfertas(req, res) {
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
         //			console.log(response);
+        //conta a quantidade de ofertas por usuario
         var quantidades = {};
         for (var i = 0; i < ofertas.length; i++) {
           if (!quantidades[ofertas[i]['usuIdGoogle']])
@@ -101,7 +106,6 @@ function getOfertas(req, res) {
         });
       });
   }
-
 }
 
 function getOfertasById(req, res) {
@@ -187,7 +191,7 @@ function getOfertasById(req, res) {
 
 function novaOferta(req, res) {
   console.log("\t-> novaOferta");
-  //  console.log('req.query:' + JSON.stringify(req.query));
+  // console.log('req.query:' + JSON.stringify(req.query));
 
   // var oferta = req.query;
   // var endereco = oferta.endereco;
@@ -197,59 +201,95 @@ function novaOferta(req, res) {
 
   //verifica endereço e
   //chama a primeira função caso o endereco já está cadastrado no banco
-  //chama a segunda função caso o endereço não esteja cadastrado
-  Endereco.verifica(req.query['endCodigo'], req, res, function(req, res) {
-    var oferta = req.query;
-    //var endereco = oferta.endereco;
-    //apaga o objeto endereço da oferta, mantendo somente o endCodigo
-    delete oferta.endereco;
-    //deleta as propriedades nulas
-    for (var k in oferta) {
-      if (oferta[k] == "") {
-        delete oferta[k];
-      }
-    }
-    console.log('oferta:' + JSON.stringify(oferta));
-    Oferta.forge(oferta)
-      .save()
-      .then(function(oferta) {
-        console.log("\t-> Nova Oferta");
-        res.status(200).json({
-          error: false
-        });
-      })
-      .catch(function(err) {
-        console.log('novaOferta: ' + JSON.stringify(err));
-        res.status(500).json({
-          error: true,
-          data: err.message
-        });
+  //caso contrário, chama a segunda função
+  Endereco.verifica(req.query['endCodigo'], req, res,
+    salvaOferta,
+    function(req, res) {
+      var endereco = req.query.endereco;
+      Endereco.novo(endereco, req, res, function(req, res) {
+        var endereco = req.params.endereco.toJSON();
+        req.query['endCodigo'] = endereco['endCodigo'];
+        salvaOferta(req, res);
       });
-  }, function(req, res) {
-    var endereco = req.query.endereco;
-    Endereco.novo(endereco, req, res, function(req, res) {
-      var endereco = req.params.endereco.toJSON();
-      var oferta = req.query;
-      //var endereco = oferta.endereco;
-      //apaga o objeto endereço da oferta, mantendo somente o endCodigo
-      delete oferta.endereco;
-      oferta['endCodigo'] = endereco['endCodigo'];
-      //console.log('oferta:' + JSON.stringify(oferta));
-      Oferta.forge(oferta)
-        .save()
-        .then(function(oferta) {
-          console.log("\t-> Nova Oferta");
-          res.status(200).json({
-            error: false
-          });
-        })
-        .catch(function(err) {
-          console.log('novaOferta: ' + JSON.stringify(err));
-          res.status(500).json({
-            error: true,
-            data: err.message
-          });
-        });
     });
-  });
+}
+
+/*SALVA OFERTA
+  Salva uma oferta no banco de dados, já com o endereço criado
+*/
+function salvaOferta(req, res) {
+  var oferta = req.query;
+  //pega o id do usuario que está enviando a requisição
+  oferta['usuCodigo'] = req.params.usuCodigo;
+  //console.log('oferta antes do delete:' + JSON.stringify(oferta));
+  //apaga o objeto endereço da oferta, mantendo somente o endCodigo
+  delete oferta.endereco;
+  //deleta as propriedades nulas
+  for (var k in oferta) {
+    if (oferta[k] == "") {
+      delete oferta[k];
+    }
+  }
+  // console.log('----------\noferta:' + JSON.stringify(oferta));
+  // return res.status(200).json({
+  //   error: false
+  // });
+  Oferta.forge(oferta)
+    .save()
+    .then(function(oferta) {
+      console.log("\t-> Nova Oferta Criada");
+      res.status(200).json({
+        error: false
+      });
+    })
+    .catch(function(err) {
+      console.log('salvaOferta: ' + JSON.stringify(err));
+      res.status(500).json({
+        error: true,
+        data: err.message
+      });
+    });
+}
+
+function updateOferta(req, res) {
+
+  var endereco = req.query.endereco;
+
+  // console.log('endereco no updateOferta:' + JSON.stringify(endereco));
+
+  if (endereco) {
+    Endereco.update(endereco, req, res, function(req, res) {
+      alteraOferta(req, res)
+    });
+  } else {
+    alteraOferta(req, res)
+  }
+}
+
+function alteraOferta(req, res) {
+  delete req.query.endereco;
+  var oferta = req.query;
+  //pega o id do usuario que está enviando a requisição
+  oferta['usuCodigo'] = req.params.usuCodigo;
+  Oferta.forge({
+      'oftCodigo': oferta['oftCodigo']
+    })
+    .save(oferta)
+    .then(function(ofertaAlterada) {
+      //console.log('usuCodigo:' + req.params.usuCodigo);
+      //console.log('req.params: ' + JSON.stringify(req.params));
+      //Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
+      //  'Alterado com sucesso!');
+      res.status(200).json({
+        error: false,
+        data: ofertaAlterada
+      });
+    })
+    .catch(function(err) {
+      console.log("Erro no updateOferta: " + JSON.stringify(err.message));
+      res.status(500).json({
+        error: true,
+        data: err.message
+      });
+    });
 }
