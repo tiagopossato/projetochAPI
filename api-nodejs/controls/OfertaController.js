@@ -81,19 +81,19 @@ function getOfertas(req, res) {
       .then(function(ofertas) {
         //			console.log(response);
         //conta a quantidade de ofertas por usuario
-        var quantidades = {};
-        for (var i = 0; i < ofertas.length; i++) {
-          if (!quantidades[ofertas[i]['usuIdGoogle']])
-            quantidades[ofertas[i]['usuIdGoogle']] = 1;
-          else
-            quantidades[ofertas[i]['usuIdGoogle']]++;
-        }
-        var resposta = {
-          ofertas, quantidades
-        };
+        // var quantidades = {};
+        // for (var i = 0; i < ofertas.length; i++) {
+        //   if (!quantidades[ofertas[i]['usuIdGoogle']])
+        //     quantidades[ofertas[i]['usuIdGoogle']] = 1;
+        //   else
+        //     quantidades[ofertas[i]['usuIdGoogle']]++;
+        // }
+        // var resposta = {
+        //   ofertas, quantidades
+        // };
         res.status(200).json({
           error: false,
-          data: resposta
+          data: ofertas
         });
       })
       .catch(function(error) {
