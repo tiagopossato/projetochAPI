@@ -19,6 +19,7 @@ function getUsuario(req, res, next) {
       if (user) {
         var resposta = user.toJSON();
         var usuario = {
+          endCodigo: resposta.endCodigo,
           usuEndVisivel: resposta.usuEndVisivel,
           usuTelefone: resposta.usuTelefone,
           usuTelefoneVisivel: resposta.usuTelefoneVisivel
@@ -134,14 +135,17 @@ function updateUsuario(req, res, next) {
         })
         .save(usuario)
         .then(function(user) {
-          //console.log('usuCodigo:' + req.params.usuCodigo);
-          //console.log('req.params: ' + JSON.stringify(req.params));
-          //Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
-          //  'Alterado com sucesso!');
-          res.status(200).json({
-            error: false,
-            data: "Usuário alterado!"
-          });
+			var resposta = user.toJSON();
+			var usuario = {
+				endCodigo: resposta.endCodigo     
+			};
+			return res.status(200).json({
+				error: false,
+				data: {
+					usuario        
+				}
+			});
+
         })
         .catch(function(err) {
           console.log("Erro no Update Usuario: " + JSON.stringify(err));

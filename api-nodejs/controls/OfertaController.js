@@ -115,7 +115,7 @@ function getOfertasById(req, res) {
     .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
     .select('OFERTA.oftCodigo',
       'OFERTA.itmCodigo',
-      'OFERTA.usuCodigo',
+      // 'OFERTA.usuCodigo',
       'OFERTA.oftDataFinal',
       'OFERTA.oftImagem',
       'OFERTA.oftQuantidade',
@@ -191,13 +191,21 @@ function getOfertasById(req, res) {
 
 function novaOferta(req, res) {
   console.log("\t-> novaOferta");
-  // console.log('req.query:' + JSON.stringify(req.query));
 
-  // var oferta = req.query;
-  // var endereco = oferta.endereco;
-  // delete oferta.endereco;
-  // console.log('oferta:' + JSON.stringify(oferta));
-  // console.log("endereco:" + JSON.stringify(endereco));
+  //console.log('req.query:' + JSON.stringify(req.query));
+  /*
+  try{
+  	console.log('req.query:' + JSON.stringify(req.query));
+  	var oferta = req.query;
+  	var endereco = oferta.endereco;
+  	delete oferta.endereco;
+  	console.log('oferta:' + JSON.stringify(oferta));
+  	console.log("endereco:" + JSON.stringify(endereco));
+  }catch(e){
+  	console.log(e);
+  }
+  return;
+  */
 
   //verifica endereço e
   //chama a primeira função caso o endereco já está cadastrado no banco
@@ -205,7 +213,8 @@ function novaOferta(req, res) {
   Endereco.verifica(req.query['endCodigo'], req, res,
     salvaOferta,
     function(req, res) {
-      var endereco = req.query.endereco;
+      var endereco = req.query['endereco'];
+      console.log("endereco:" + JSON.stringify(endereco));
       Endereco.novo(endereco, req, res, function(req, res) {
         var endereco = req.params.endereco.toJSON();
         req.query['endCodigo'] = endereco['endCodigo'];

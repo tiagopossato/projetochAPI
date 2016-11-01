@@ -121,12 +121,12 @@ function verificaEndereco(id, req, res, callbackValido, callbackInvalido) {
     })
     .fetch()
     .then(function(enderecos) {
-      console.log(enderecos.toJSON());
-      console.log('Endereco Valido');
+      //console.log(enderecos.toJSON());
+      //console.log('Endereco Valido');
       callbackValido(req, res);
     })
     .catch(function(err) {
-      console.log('Endereco invalido');
+      //console.log('Endereco invalido');
       callbackInvalido(req, res);
     });
 }
