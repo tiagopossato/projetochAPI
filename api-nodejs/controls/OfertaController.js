@@ -322,10 +322,10 @@ function recebeFoto(req, res) {
 
   try {
     form.parse(req, function(err, fields, files) {
-      res.writeHead(200, {
-        'content-type': 'text/plain'
+      res.status(200).json({
+        error: true,
+        data: "Veio"
       });
-      res.write('received upload:\n\n');
 
       var image = files.file,
         image_upload_path_old = image.path,
