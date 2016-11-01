@@ -314,7 +314,7 @@ function alteraOferta(req, res) {
 function recebeFoto(req, res) {
   try {
     var form = new formidable.IncomingForm();
-    var oftCodigo = req.params['oftCodigo'];
+    var oftCodigo = req.headers['oftcodigo'];
     console.log('oftCodigo: ' + oftCodigo);
   } catch (e) {
     console.log('new formidable.IncomingForm(): ' + e);
