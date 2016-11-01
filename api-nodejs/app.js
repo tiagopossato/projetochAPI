@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/v1', routes);
+//prove acesso aos arquivos publicos
 app.use(express.static('public'));
 
 // catch 404 and forward to error handler

@@ -1,3 +1,4 @@
 api-nodejs/node_modules/
 api-nodejs/nbproject/
 api-nodejs/public/images/*
+api-nodejs/npm-debug.log

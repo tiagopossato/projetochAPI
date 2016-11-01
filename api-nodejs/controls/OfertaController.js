@@ -315,19 +315,15 @@ function recebeFoto(req, res) {
   try {
     var form = new formidable.IncomingForm();
     var oftCodigo = req.headers['oftcodigo'];
-    console.log('oftCodigo: ' + oftCodigo);
+    //console.log('oftCodigo: ' + oftCodigo);
   } catch (e) {
     console.log('new formidable.IncomingForm(): ' + e);
   }
 
   try {
     form.parse(req, function(err, fields, files) {
-      res.status(200).json({
-        error: true,
-        data: "Veio"
-      });
 
-      var image = files.file,
+        var image = files.file,
         image_upload_path_old = image.path,
         image_upload_path_new = './public/images/',
         image_upload_name = image.name,
@@ -341,18 +337,31 @@ function recebeFoto(req, res) {
           function(err) {
             if (err) {
               console.log('Err: ', err);
-              res.end('Deu merda na hora de mover a imagem!');
+              return res.status(500).json({
+                error: true,
+                data: err
+              });
             }
             var msg = 'Imagem ' + image_upload_name + ' salva em: ' +
               image_upload_path_new;
             console.log(msg);
-            res.end(msg);
+          //salva caminho da imagem no banco de dados
+          req.query = {
+            'oftCodigo': oftCodigo,
+            'oftImagem': image_upload_name,
+            'endereco': null
+          };
+          alteraOferta(req, res);
+          return;
           });
       } else {
         fs.mkdir(image_upload_path_new, function(err) {
           if (err) {
             console.log('Err: ', err);
-            res.end('Deu merda na hora de criar o diretório!');
+            return res.status(500).json({
+              error: true,
+              data: err
+            });
           }
           mv(
             image_upload_path_old,
@@ -361,7 +370,14 @@ function recebeFoto(req, res) {
               var msg = 'Imagem ' + image_upload_name +
                 ' salva em: ' + image_upload_path_new;
               console.log(msg);
-              res.end(msg);
+                //salva caminho da imagem no banco de dados
+                req.query = {
+                  'oftCodigo': oftCodigo,
+                  'oftImagem': image_upload_name,
+                  'endereco': null
+                };
+                alteraOferta(req, res);
+                return;
             });
         });
       }
