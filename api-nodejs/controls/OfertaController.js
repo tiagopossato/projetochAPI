@@ -195,7 +195,7 @@ function getOfertasById(req, res) {
 function novaOferta(req, res) {
   console.log("\t-> novaOferta");
 
-  console.log('req.query:' + JSON.stringify(req.query));
+  //console.log('req.query:' + JSON.stringify(req.query));
   /*
   try{
   	console.log('req.query:' + JSON.stringify(req.query));
