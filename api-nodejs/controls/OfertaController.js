@@ -3,13 +3,16 @@ let banco = require('../models/banco');
 let Oferta = require('../models/Oferta');
 let Endereco = require('../controls/EnderecoController');
 let strtotime = require('strtotime');
-
+let formidable = require('formidable');
+let fs = require('fs');
+let mv = require('mv');
 
 module.exports = {
   get: getOfertas,
   getById: getOfertasById,
   post: novaOferta,
-  put: updateOferta
+  put: updateOferta,
+  recebeFoto: recebeFoto
 };
 
 function getOfertas(req, res) {
@@ -192,7 +195,7 @@ function getOfertasById(req, res) {
 function novaOferta(req, res) {
   console.log("\t-> novaOferta");
 
-  //console.log('req.query:' + JSON.stringify(req.query));
+  console.log('req.query:' + JSON.stringify(req.query));
   /*
   try{
   	console.log('req.query:' + JSON.stringify(req.query));
@@ -245,10 +248,15 @@ function salvaOferta(req, res) {
   // });
   Oferta.forge(oferta)
     .save()
-    .then(function(oferta) {
+    .then(function(oft) {
       console.log("\t-> Nova Oferta Criada");
+      var resposta = oft.toJSON();
+      var oferta = {
+        oftCodigo: resposta.oftCodigo
+      };
       res.status(200).json({
-        error: false
+        error: false,
+        data: oferta
       });
     })
     .catch(function(err) {
@@ -301,4 +309,64 @@ function alteraOferta(req, res) {
         data: err.message
       });
     });
+}
+
+function recebeFoto(req, res) {
+  try {
+    var form = new formidable.IncomingForm();
+    var oftCodigo = req.params['oftCodigo'];
+    console.log('oftCodigo: ' + oftCodigo);
+  } catch (e) {
+    console.log('new formidable.IncomingForm(): ' + e);
+  }
+
+  try {
+    form.parse(req, function(err, fields, files) {
+      res.writeHead(200, {
+        'content-type': 'text/plain'
+      });
+      res.write('received upload:\n\n');
+
+      var image = files.file,
+        image_upload_path_old = image.path,
+        image_upload_path_new = './public/images/',
+        image_upload_name = image.name,
+        image_upload_path_name = image_upload_path_new +
+        image_upload_name;
+
+      if (fs.existsSync(image_upload_path_new)) {
+        mv(
+          image_upload_path_old,
+          image_upload_path_name,
+          function(err) {
+            if (err) {
+              console.log('Err: ', err);
+              res.end('Deu merda na hora de mover a imagem!');
+            }
+            var msg = 'Imagem ' + image_upload_name + ' salva em: ' +
+              image_upload_path_new;
+            console.log(msg);
+            res.end(msg);
+          });
+      } else {
+        fs.mkdir(image_upload_path_new, function(err) {
+          if (err) {
+            console.log('Err: ', err);
+            res.end('Deu merda na hora de criar o diretório!');
+          }
+          mv(
+            image_upload_path_old,
+            image_upload_path_name,
+            function(err) {
+              var msg = 'Imagem ' + image_upload_name +
+                ' salva em: ' + image_upload_path_new;
+              console.log(msg);
+              res.end(msg);
+            });
+        });
+      }
+    });
+  } catch (e) {
+    console.log("form.parse: " + e);
+  }
 }

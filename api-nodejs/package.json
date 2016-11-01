@@ -11,9 +11,11 @@
     "debug": "~2.2.0",
     "express": "~4.13.4",
     "fcm-push": "^1.1.0",
+    "formidable": "^1.0.17",
     "knex": "^0.12.1",
     "moment-timezone": "^0.5.5",
     "multer": "^1.2.0",
+    "mv": "^2.1.1",
     "mysql": "^2.5.4",
     "strtotime": "^1.0.0"
   }
