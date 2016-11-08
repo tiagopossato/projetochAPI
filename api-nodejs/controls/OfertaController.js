@@ -36,7 +36,7 @@ function getOfertas(req, res) {
     banco('OFERTA')
       .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
       .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
-        'OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
+       'OFERTA.oftQuantidade','OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
       .whereIn('OFERTA.itmCodigo', preferencias.itens)
       .where('OFERTA.oftDataFinal', '<=',
         preferencias.dataVencimento)
@@ -78,13 +78,13 @@ function getOfertas(req, res) {
     banco('OFERTA')
       .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
       .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
-        'OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
+        'OFERTA.oftQuantidade','OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
       .where('OFERTA.oftDataFinal', '<=',
         preferencias.dataVencimento)
       .limit(parseInt(preferencias.offset['qtd']))
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
-        //			console.log(response);
+        console.log(ofertas);
         //conta a quantidade de ofertas por usuario
         // var quantidades = {};
         // for (var i = 0; i < ofertas.length; i++) {
