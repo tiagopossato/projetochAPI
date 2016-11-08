@@ -17,6 +17,7 @@ module.exports = {
 
 function getOfertas(req, res) {
   var preferencias = req.query;
+  console.log(preferencias);
   if (preferencias.dataVencimento == undefined ||
     preferencias.offset == undefined) {
     preferencias = {
@@ -30,8 +31,7 @@ function getOfertas(req, res) {
     };
   }
 
-  if (preferencias.itens && preferencias.itens.length > 0) {
-    //console.log(preferencias);
+  if (preferencias.itens && preferencias.itens.length > 0) {	
     //ver http: //knexjs.org/#Raw-Queries
     banco('OFERTA')
       .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
@@ -43,8 +43,9 @@ function getOfertas(req, res) {
       .limit(parseInt(preferencias.offset['qtd']))
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
-        //			console.log(response);
+        //console.log(response);
         //conta a quantidade de ofertas por usuário
+/*
         var quantidades = {};
         for (var i = 0; i < ofertas.length; i++) {
           if (!quantidades[ofertas[i]['usuIdGoogle']])
@@ -55,9 +56,10 @@ function getOfertas(req, res) {
         var resposta = {
           ofertas, quantidades
         };
+*/
         res.status(200).json({
           error: false,
-          data: resposta
+          data: ofertas
         });
       })
       .catch(function(error) {
@@ -71,7 +73,7 @@ function getOfertas(req, res) {
       })
       .debug();
   } else {
-    //console.log(preferencias);
+
     //ver http: //knexjs.org/#Raw-Queries
     banco('OFERTA')
       .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
@@ -312,6 +314,7 @@ function alteraOferta(req, res) {
 }
 
 function recebeFoto(req, res) {
+	console.log("Recebendo foto");
   try {
     var form = new formidable.IncomingForm();
     var oftCodigo = req.headers['oftcodigo'];
@@ -323,7 +326,7 @@ function recebeFoto(req, res) {
   try {
     form.parse(req, function(err, fields, files) {
 
-        var image = files.file,
+      var image = files.file,
         image_upload_path_old = image.path,
         image_upload_path_new = './public/images/',
         image_upload_name = image.name,
@@ -345,14 +348,14 @@ function recebeFoto(req, res) {
             var msg = 'Imagem ' + image_upload_name + ' salva em: ' +
               image_upload_path_new;
             console.log(msg);
-          //salva caminho da imagem no banco de dados
-          req.query = {
-            'oftCodigo': oftCodigo,
-            'oftImagem': image_upload_name,
-            'endereco': null
-          };
-          alteraOferta(req, res);
-          return;
+            //salva caminho da imagem no banco de dados
+            req.query = {
+              'oftCodigo': oftCodigo,
+              'oftImagem': image_upload_name,
+              'endereco': null
+            };
+            alteraOferta(req, res);
+            return;
           });
       } else {
         fs.mkdir(image_upload_path_new, function(err) {
@@ -370,14 +373,14 @@ function recebeFoto(req, res) {
               var msg = 'Imagem ' + image_upload_name +
                 ' salva em: ' + image_upload_path_new;
               console.log(msg);
-                //salva caminho da imagem no banco de dados
-                req.query = {
-                  'oftCodigo': oftCodigo,
-                  'oftImagem': image_upload_name,
-                  'endereco': null
-                };
-                alteraOferta(req, res);
-                return;
+              //salva caminho da imagem no banco de dados
+              req.query = {
+                'oftCodigo': oftCodigo,
+                'oftImagem': image_upload_name,
+                'endereco': null
+              };
+              alteraOferta(req, res);
+              return;
             });
         });
       }
