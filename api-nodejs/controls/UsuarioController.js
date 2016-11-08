@@ -169,7 +169,7 @@ function updateUsuario(req, res, next) {
       .then(function(user) {
         var usuario = user.toJSON();
         //console.log('usuCodigo:' + req.params.usuCodigo);
-        console.log('usuario: ' + JSON.stringify(usuario));
+        //console.log('usuario: ' + JSON.stringify(usuario));
         //Notificacoes.enviaNotificacao(req.params.usuIdGoogle,
         //  'Alterado com sucesso!');
         res.status(200).json({
@@ -255,7 +255,7 @@ function validaToken(req, res, next) {
     https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         // console.log('statusCodeGoogle:', resposta.statusCode);
-        var gData = JSON.parse(d);
+        let gData = JSON.parse(d);
         req.params.usuIdGoogle = gData['sub'];
         //console.log(gData);
         if (resposta.statusCode === 200) {
@@ -265,7 +265,7 @@ function validaToken(req, res, next) {
             .fetch()
             .then(function(user) {
               if (user) {
-                usuario = user.toJSON();
+                let usuario = user.toJSON();
                 req.params.usuCodigo = usuario['usuCodigo'];
                 next();
               } else {
