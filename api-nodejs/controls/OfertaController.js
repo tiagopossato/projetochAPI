@@ -84,7 +84,7 @@ function getOfertas(req, res) {
       .limit(parseInt(preferencias.offset['qtd']))
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
-        console.log(ofertas);
+        //console.log(ofertas);
         //conta a quantidade de ofertas por usuario
         // var quantidades = {};
         // for (var i = 0; i < ofertas.length; i++) {
