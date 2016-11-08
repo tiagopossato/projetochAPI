@@ -255,7 +255,7 @@ function validaToken(req, res, next) {
     https.get(url, (resposta) => {
       resposta.on('data', (d) => {
         // console.log('statusCodeGoogle:', resposta.statusCode);
-        let gData = JSON.parse(d);
+        var gData = JSON.parse(d);
         req.params.usuIdGoogle = gData['sub'];
         //console.log(gData);
         if (resposta.statusCode === 200) {
