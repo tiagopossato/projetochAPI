@@ -1,3 +1,4 @@
+"use strict";
 var usuModel = require('../models/Usuario');
 //var Notificacoes = require('../controls/NotificacoesController');
 var Endereco = require('../controls/EnderecoController');
@@ -137,12 +138,12 @@ function updateUsuario(req, res, next) {
         .then(function(user) {
 			var resposta = user.toJSON();
 			var usuario = {
-				endCodigo: resposta.endCodigo     
+				endCodigo: resposta.endCodigo
 			};
 			return res.status(200).json({
 				error: false,
 				data: {
-					usuario        
+					usuario
 				}
 			});
 
