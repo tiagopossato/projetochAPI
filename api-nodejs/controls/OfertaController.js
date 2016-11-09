@@ -91,6 +91,9 @@ function getOfertas(req, res) {
       .limit(parseInt(preferencias.offset['qtd']))
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
+				for(var i=0;i<ofertas.length;i++){
+					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY(),
+				}
         //console.log(ofertas);
         //conta a quantidade de ofertas por usuario
         // var quantidades = {};
@@ -154,8 +157,8 @@ function getOfertasById(req, res) {
         itmCodigo: response[0]['itmCodigo'],
         oftQuantidade: response[0]['oftQuantidade'],
         oftValor: response[0]['oftValor'],
-        oftDataInicial: response[0]['oftDataInicial'].replace('T','+').split('+')[0],
-        oftDataFinal: response[0]['oftDataFinal'].replace('T','+').split('+')[0],
+        oftDataInicial: response[0]['oftDataInicial'].formatMMDDYYYY(),
+        oftDataFinal: response[0]['oftDataFinal'].formatMMDDYYYY(),
         endCodigo: response[0]['endCodigo'],
       };
 
@@ -209,6 +212,9 @@ function getMinhasOfertas(req, res) {
         'OFERTA.oftQuantidade','OFERTA.oftImagem')
       .where('OFERTA.usuCodigo', '=',usuCodigo)
       .then(function(ofertas) {
+				for(var i=0;i<ofertas.length;i++){
+					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY(),
+				}
         res.status(200).json({
           error: false,
           data: ofertas
