@@ -50,6 +50,9 @@ function getOfertas(req, res) {
       .limit(parseInt(preferencias.offset['qtd']))
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
+				for(var i=0;i<ofertas.length;i++){
+					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY();
+				}
         //console.log(response);
         //conta a quantidade de ofertas por usuário
 /*
@@ -92,7 +95,7 @@ function getOfertas(req, res) {
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
 				for(var i=0;i<ofertas.length;i++){
-					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY(),
+					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY();
 				}
         //console.log(ofertas);
         //conta a quantidade de ofertas por usuario
@@ -213,7 +216,7 @@ function getMinhasOfertas(req, res) {
       .where('OFERTA.usuCodigo', '=',usuCodigo)
       .then(function(ofertas) {
 				for(var i=0;i<ofertas.length;i++){
-					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY(),
+					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY();
 				}
         res.status(200).json({
           error: false,
