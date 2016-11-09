@@ -204,6 +204,26 @@ function getOfertasById(req, res) {
 function getMinhasOfertas(req, res) {
 	var usuCodigo = req.params.usuCodigo;
 
+	banco('OFERTA')
+      .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
+        'OFERTA.oftQuantidade','OFERTA.oftImagem')
+      .where('OFERTA.usuCodigo', '=',usuCodigo)
+      .then(function(ofertas) {
+        res.status(200).json({
+          error: false,
+          data: ofertas
+        });
+      })
+      .catch(function(error) {
+        console.log(error.message);
+        res.status(500).json({
+          error: true,
+          data: {
+            message: error.message
+          }
+        });
+      });
+/*
   banco('OFERTA')
     .where('usuCodigo', '=', usuCodigo)
     .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
@@ -236,6 +256,7 @@ function getMinhasOfertas(req, res) {
 		      oftCodigo: response[i]['oftCodigo'],
 		      usuCodigo: response[i]['usuCodigo'],
 		      itmCodigo: response[i]['itmCodigo'],
+		      oftImagem: response[i]['oftImagem'],
 		      oftQuantidade: response[i]['oftQuantidade'],
 		      oftValor: response[i]['oftValor'],
 		      oftDataInicial: response[i]['oftDataInicial'].formatMMDDYYYY(),
@@ -249,7 +270,7 @@ function getMinhasOfertas(req, res) {
 		        delete oferta[k];
 		      }
 		    }
-		    var endereco = {
+		    var endereco = { 
 		        endLogradouro: response[i]['endLogradouro'],
 		        endBairro: response[i]['endBairro'],
 		        endNumero: response[i]['endNumero'],
@@ -282,7 +303,7 @@ function getMinhasOfertas(req, res) {
         }
       });
     });
-
+*/
 }
 
 function novaOferta(req, res) {
