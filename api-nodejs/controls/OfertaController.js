@@ -217,7 +217,7 @@ function getMinhasOfertas(req, res) {
       .where('OFERTA.usuCodigo', '=',usuCodigo)
       .then(function(ofertas) {
 				for(var i=0;i<ofertas.length;i++){
-					ofertas[i]['oftDataInicial'] = ofertas[i]['oftDataInicial'].formatMMDDYYYY();
+					ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
 				}
         res.status(200).json({
           error: false,
