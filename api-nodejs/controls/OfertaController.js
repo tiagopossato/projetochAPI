@@ -7,10 +7,10 @@ let formidable = require('formidable');
 let fs = require('fs');
 let mv = require('mv');
 
-Date.prototype.formatMMDDYYYY = function(){
-    return  this.getDate()+ 
-    "/" +  (this.getMonth() + 1) +
-    "/" +  this.getFullYear();
+Date.prototype.formatMMDDYYYY = function() {
+  return this.getDate() +
+    "/" + (this.getMonth() + 1) +
+    "/" + this.getFullYear();
 }
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
   post: novaOferta,
   put: updateOferta,
   recebeFoto: recebeFoto,
-	minhasOfertas: getMinhasOfertas
+  minhasOfertas: getMinhasOfertas
 };
 
 function getOfertas(req, res) {
@@ -38,12 +38,12 @@ function getOfertas(req, res) {
     };
   }
 
-  if (preferencias.itens && preferencias.itens.length > 0) {	
+  if (preferencias.itens && preferencias.itens.length > 0) {
     //ver http: //knexjs.org/#Raw-Queries
     banco('OFERTA')
       .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
       .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
-       'OFERTA.oftQuantidade','OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
+        'OFERTA.oftQuantidade', 'OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
       .whereIn('OFERTA.itmCodigo', preferencias.itens)
       .where('OFERTA.oftDataFinal', '<=',
         preferencias.dataVencimento)
@@ -51,12 +51,16 @@ function getOfertas(req, res) {
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
 
-				for(var i=0;i<ofertas.length;i++){
-					ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
-				}
+        for (var i = 0; i < ofertas.length; i++) {
+          try {
+            ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
+          } catch (e) {
+            console.log(e);
+          }
+        }
         //console.log(response);
         //conta a quantidade de ofertas por usuário
-				/*
+        /*
         var quantidades = {};
         for (var i = 0; i < ofertas.length; i++) {
           if (!quantidades[ofertas[i]['usuIdGoogle']])
@@ -89,15 +93,19 @@ function getOfertas(req, res) {
     banco('OFERTA')
       .join('USUARIO', 'USUARIO.usuCodigo', '=', 'OFERTA.usuCodigo')
       .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
-        'OFERTA.oftQuantidade','OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
+        'OFERTA.oftQuantidade', 'OFERTA.oftImagem', 'USUARIO.usuIdGoogle')
       .where('OFERTA.oftDataFinal', '<=',
         preferencias.dataVencimento)
       .limit(parseInt(preferencias.offset['qtd']))
       .offset(parseInt(preferencias.offset['inicio']))
       .then(function(ofertas) {
-				for(var i=0;i<ofertas.length;i++){
-					ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
-				}
+        for (var i = 0; i < ofertas.length; i++) {
+          try {
+            ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
+          } catch (e) {
+            console.log(e);
+          }
+        }
         //console.log(ofertas);
         //conta a quantidade de ofertas por usuario
         // var quantidades = {};
@@ -161,8 +169,10 @@ function getOfertasById(req, res) {
         itmCodigo: response[0]['itmCodigo'],
         oftQuantidade: response[0]['oftQuantidade'],
         oftValor: response[0]['oftValor'],
-        oftDataInicial: response[0]['oftDataInicial'].formatMMDDYYYY(),
-        oftDataFinal: response[0]['oftDataFinal'].formatMMDDYYYY(),
+        oftDataInicial: response[0]['oftDataInicial'] ?
+          response[0]['oftDataInicial'].formatMMDDYYYY(),
+        oftDataFinal: response[0]['oftDataFinal'] ?
+          response[0]['oftDataFinal'].formatMMDDYYYY(),
         endCodigo: response[0]['endCodigo'],
       };
 
@@ -209,111 +219,111 @@ function getOfertasById(req, res) {
 }
 
 function getMinhasOfertas(req, res) {
-	var usuCodigo = req.params.usuCodigo;
+  var usuCodigo = req.params.usuCodigo;
 
-	banco('OFERTA')
-      .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
-        'OFERTA.oftQuantidade','OFERTA.oftImagem')
-      .where('OFERTA.usuCodigo', '=',usuCodigo)
-      .then(function(ofertas) {
-				for(var i=0;i<ofertas.length;i++){
-					ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
-				}
-        res.status(200).json({
-          error: false,
-          data: ofertas
-        });
-      })
-      .catch(function(error) {
-        console.log(error.message);
-        res.status(500).json({
-          error: true,
-          data: {
-            message: error.message
-          }
-        });
-      });
-/*
   banco('OFERTA')
-    .where('usuCodigo', '=', usuCodigo)
-    .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
-    .select('OFERTA.oftCodigo',
-      'OFERTA.itmCodigo',
-      'OFERTA.oftDataFinal',
-      'OFERTA.oftImagem',
-      'OFERTA.oftQuantidade',
-      'OFERTA.oftValor',
-      'OFERTA.oftDataInicial',
-      'ENDERECO.endCodigo',
-      'ENDERECO.endCep',
-      'ENDERECO.endLogradouro',
-      'ENDERECO.endBairro',
-      'ENDERECO.endNumero',
-      'ENDERECO.cidCodigo',
-      'ENDERECO.ufCodigo',
-      'ENDERECO.endLatitude',
-      'ENDERECO.endLongitude')
-    .then(function(response) {
-      //console.log(response);
-      if (!response) {
-        throw 'Nenhum registro encontrado';
+    .select('OFERTA.oftCodigo', 'OFERTA.itmCodigo', 'OFERTA.oftDataFinal',
+      'OFERTA.oftQuantidade', 'OFERTA.oftImagem')
+    .where('OFERTA.usuCodigo', '=', usuCodigo)
+    .then(function(ofertas) {
+      for (var i = 0; i < ofertas.length; i++) {
+        ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
       }
-
-			var resposta = [];
-
-			for(var i=0;i<response.length;i++){
-		    var oferta = {
-		      oftCodigo: response[i]['oftCodigo'],
-		      usuCodigo: response[i]['usuCodigo'],
-		      itmCodigo: response[i]['itmCodigo'],
-		      oftImagem: response[i]['oftImagem'],
-		      oftQuantidade: response[i]['oftQuantidade'],
-		      oftValor: response[i]['oftValor'],
-		      oftDataInicial: response[i]['oftDataInicial'].formatMMDDYYYY(),
-		      oftDataFinal: response[i]['oftDataFinal'].formatMMDDYYYY(),
-		      endCodigo: response[i]['endCodigo'],
-		    };
-
-		    //deleta as propriedades nulas
-		    for (var k in oferta || oferta[k] == "") {
-		      if (oferta[k] == null) {
-		        delete oferta[k];
-		      }
-		    }
-		    var endereco = { 
-		        endLogradouro: response[i]['endLogradouro'],
-		        endBairro: response[i]['endBairro'],
-		        endNumero: response[i]['endNumero'],
-		        endCep: response[i]['endCep'],
-		        cidCodigo: response[i]['cidCodigo'],
-		        ufCodigo: response[i]['ufCodigo'],
-		        endLatitude: response[i]['endLatitude'],
-		        endLongitude: response[i]['endLongitude'],
-		      }
-		      //deleta as propriedades nulas
-		    for (var k in endereco) {
-		      if (endereco[k] == null || endereco[k] == "") {
-		        delete endereco[k];
-		      }
-		    }
-				resposta.push({oferta, endereco});
-			}
-
       res.status(200).json({
         error: false,
-        data: resposta
+        data: ofertas
       });
     })
     .catch(function(error) {
-      console.log(error);
+      console.log(error.message);
       res.status(500).json({
         error: true,
         data: {
-          message: error.message ? error.message : error
+          message: error.message
         }
       });
     });
-*/
+  /*
+    banco('OFERTA')
+      .where('usuCodigo', '=', usuCodigo)
+      .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
+      .select('OFERTA.oftCodigo',
+        'OFERTA.itmCodigo',
+        'OFERTA.oftDataFinal',
+        'OFERTA.oftImagem',
+        'OFERTA.oftQuantidade',
+        'OFERTA.oftValor',
+        'OFERTA.oftDataInicial',
+        'ENDERECO.endCodigo',
+        'ENDERECO.endCep',
+        'ENDERECO.endLogradouro',
+        'ENDERECO.endBairro',
+        'ENDERECO.endNumero',
+        'ENDERECO.cidCodigo',
+        'ENDERECO.ufCodigo',
+        'ENDERECO.endLatitude',
+        'ENDERECO.endLongitude')
+      .then(function(response) {
+        //console.log(response);
+        if (!response) {
+          throw 'Nenhum registro encontrado';
+        }
+
+  			var resposta = [];
+
+  			for(var i=0;i<response.length;i++){
+  		    var oferta = {
+  		      oftCodigo: response[i]['oftCodigo'],
+  		      usuCodigo: response[i]['usuCodigo'],
+  		      itmCodigo: response[i]['itmCodigo'],
+  		      oftImagem: response[i]['oftImagem'],
+  		      oftQuantidade: response[i]['oftQuantidade'],
+  		      oftValor: response[i]['oftValor'],
+  		      oftDataInicial: response[i]['oftDataInicial'].formatMMDDYYYY(),
+  		      oftDataFinal: response[i]['oftDataFinal'].formatMMDDYYYY(),
+  		      endCodigo: response[i]['endCodigo'],
+  		    };
+
+  		    //deleta as propriedades nulas
+  		    for (var k in oferta || oferta[k] == "") {
+  		      if (oferta[k] == null) {
+  		        delete oferta[k];
+  		      }
+  		    }
+  		    var endereco = {
+  		        endLogradouro: response[i]['endLogradouro'],
+  		        endBairro: response[i]['endBairro'],
+  		        endNumero: response[i]['endNumero'],
+  		        endCep: response[i]['endCep'],
+  		        cidCodigo: response[i]['cidCodigo'],
+  		        ufCodigo: response[i]['ufCodigo'],
+  		        endLatitude: response[i]['endLatitude'],
+  		        endLongitude: response[i]['endLongitude'],
+  		      }
+  		      //deleta as propriedades nulas
+  		    for (var k in endereco) {
+  		      if (endereco[k] == null || endereco[k] == "") {
+  		        delete endereco[k];
+  		      }
+  		    }
+  				resposta.push({oferta, endereco});
+  			}
+
+        res.status(200).json({
+          error: false,
+          data: resposta
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+        res.status(500).json({
+          error: true,
+          data: {
+            message: error.message ? error.message : error
+          }
+        });
+      });
+  */
 }
 
 function novaOferta(req, res) {
@@ -436,7 +446,7 @@ function alteraOferta(req, res) {
 }
 
 function recebeFoto(req, res) {
-	console.log("Recebendo foto");
+  console.log("Recebendo foto");
   try {
     var form = new formidable.IncomingForm();
     var oftCodigo = req.headers['oftcodigo'];
