@@ -170,9 +170,9 @@ function getOfertasById(req, res) {
         oftQuantidade: response[0]['oftQuantidade'],
         oftValor: response[0]['oftValor'],
         oftDataInicial: response[0]['oftDataInicial'] ?
-          response[0]['oftDataInicial'].formatMMDDYYYY(),
+          response[0]['oftDataInicial'].formatMMDDYYYY() : "",
         oftDataFinal: response[0]['oftDataFinal'] ?
-          response[0]['oftDataFinal'].formatMMDDYYYY(),
+          response[0]['oftDataFinal'].formatMMDDYYYY() : "",
         endCodigo: response[0]['endCodigo'],
       };
 
