@@ -227,7 +227,11 @@ function getMinhasOfertas(req, res) {
     .where('OFERTA.usuCodigo', '=', usuCodigo)
     .then(function(ofertas) {
       for (var i = 0; i < ofertas.length; i++) {
-        ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
+        try {
+          ofertas[i]['oftDataFinal'] = ofertas[i]['oftDataFinal'].formatMMDDYYYY();
+        } catch (e) {
+          console.log(e);
+        }
       }
       res.status(200).json({
         error: false,
