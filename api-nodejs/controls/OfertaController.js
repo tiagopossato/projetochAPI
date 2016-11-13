@@ -137,6 +137,7 @@ function getOfertas(req, res) {
 
 function getOfertasById(req, res) {
   var oftCodigo = req.params.id;
+
   banco('OFERTA')
     .where('oftCodigo', '=', oftCodigo)
     .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
@@ -158,7 +159,7 @@ function getOfertasById(req, res) {
       'ENDERECO.endLatitude',
       'ENDERECO.endLongitude')
     .then(function(response) {
-      // console.log(response);
+
       if (!response[0]) {
         throw 'Nenhum registro encontrado';
       }
@@ -199,15 +200,10 @@ function getOfertasById(req, res) {
         }
       }
 
-      res.status(200).json({
-        error: false,
-        data: {
-          oferta, endereco
-        }
-      });
+      res.status(200).json({        error: false,        data: {          oferta, endereco        }      });
     })
     .catch(function(error) {
-      console.log(error);
+      console.log('Erro no getbyid: ' + error);
       res.status(500).json({
         error: true,
         data: {

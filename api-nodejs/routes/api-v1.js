@@ -24,8 +24,8 @@ router.get('/usuario/update/me', upload.array(),
   usuarios.validaToken, usuarios.update);
 
 /*OFERTAS*/
-router.get('/ofertas', usuarios.validaToken, ofertas.get);
-router.get('/ofertas/:id', usuarios.validaToken, ofertas.getById);
+router.get('/ofertas', /*usuarios.validaToken,*/ ofertas.get);
+router.get('/oferta/:id', /*usuarios.validaToken,*/ ofertas.getById);
 router.get('/minhasofertas', usuarios.validaToken, ofertas.minhasOfertas);
 router.get('/novaoferta', usuarios.validaToken, ofertas.post);
 router.get('/alteraoferta', usuarios.validaToken, ofertas.put);
