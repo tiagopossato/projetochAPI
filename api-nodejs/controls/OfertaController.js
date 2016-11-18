@@ -143,7 +143,7 @@ function getOfertasById(req, res) {
     .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
     .select('OFERTA.oftCodigo',
       'OFERTA.itmCodigo',
-      // 'OFERTA.usuCodigo',
+      'OFERTA.usuCodigo',
       'OFERTA.oftDataFinal',
       'OFERTA.oftImagem',
       'OFERTA.oftQuantidade',
