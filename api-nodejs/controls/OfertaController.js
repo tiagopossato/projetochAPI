@@ -176,6 +176,8 @@ function getOfertasById(req, res) {
         oftDataFinal: response[0]['oftDataFinal'] ?
           response[0]['oftDataFinal'].formatMMDDYYYY() : "",
         endCodigo: response[0]['endCodigo'],
+        oftDataInicialCru: response[0]['oftDataInicial'],
+        oftDataFinalCru: response[0]['oftDataFinal']
       };
 
       //deleta as propriedades nulas
