@@ -203,10 +203,15 @@ function getOfertasById(req, res) {
         }
       }
 
+		var usuario = {
+			usuNome: 'John Travolta',
+			usuImagem: 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUwNjQ0ODkxN15BMl5BanBnXkFtZTcwMDc5NjQwNw@@._V1_UY317_CR11,0,214,317_AL_.jpg'
+		}
+
       res.status(200).json({
         error: false,
         data: {
-          oferta, endereco
+          oferta, endereco, usuario
         }
       });
     })
