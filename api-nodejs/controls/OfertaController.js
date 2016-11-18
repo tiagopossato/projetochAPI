@@ -168,6 +168,7 @@ function getOfertasById(req, res) {
         oftCodigo: response[0]['oftCodigo'],
         usuCodigo: response[0]['usuCodigo'],
         itmCodigo: response[0]['itmCodigo'],
+        oftImagem: response[0]['oftImagem'],
         oftQuantidade: response[0]['oftQuantidade'],
         oftValor: response[0]['oftValor'],
         oftDataInicial: response[0]['oftDataInicial'] ?
@@ -200,7 +201,12 @@ function getOfertasById(req, res) {
         }
       }
 
-      res.status(200).json({        error: false,        data: {          oferta, endereco        }      });
+      res.status(200).json({
+        error: false,
+        data: {
+          oferta, endereco
+        }
+      });
     })
     .catch(function(error) {
       console.log('Erro no getbyid: ' + error);
