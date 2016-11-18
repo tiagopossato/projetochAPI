@@ -166,7 +166,6 @@ function getOfertasById(req, res) {
 
       var oferta = {
         oftCodigo: response[0]['oftCodigo'],
-        usuCodigo: response[0]['usuCodigo'],
         itmCodigo: response[0]['itmCodigo'],
         oftImagem: response[0]['oftImagem'],
         oftQuantidade: response[0]['oftQuantidade'],
@@ -204,6 +203,7 @@ function getOfertasById(req, res) {
       }
 
 		var usuario = {
+	        usuCodigo: response[0]['usuCodigo'],
 			usuNome: 'John Travolta',
 			usuImagem: 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUwNjQ0ODkxN15BMl5BanBnXkFtZTcwMDc5NjQwNw@@._V1_UY317_CR11,0,214,317_AL_.jpg'
 		}
