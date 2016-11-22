@@ -137,8 +137,21 @@ function getOfertas(req, res) {
 
 function getOfertasById(req, res) {
   var oftCodigo = req.params.id;
+  knex.raw('SELECT ' +
+      'of.itmCodigo, of.usuCodigo, of.oftDataFinal, of.oftImagem,' +
+      'of.oftQuantidade, of.oftValor, of.oftDataInicial' +
+      'us.usuNome, us.usuEmail, us.usuImagem,' +
+      'en.endCodigo, en.endCep, en.endLogradouro, en.endBairo, en.endNumero' +
+      'en.cidCodigo, en.ufCodigo, en.endLatitude, en.endLongitude' +
+      'FROM OFERTA as of,USUARIO as us,ENDERECO as en' +
+      'WHERE of.oftCodigo=? AND of.usuCodigo = us.usuCodigo AND of.endCodigo = en.endCodigo;', [
+        oftCodigo
+      ])
+    .then(function(resp) {
+      console.log(JSON.stringify(resp));
+    });
 
-  banco('OFERTA')
+  /*banco('OFERTA')
     .where('oftCodigo', '=', oftCodigo)
     .join('ENDERECO', 'USUARIO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo',
       'OFERTA.usuCodigo', '=', 'USUARIO.usuCodigo')
@@ -228,7 +241,7 @@ function getOfertasById(req, res) {
           message: error.message ? error.message : error
         }
       });
-    });
+    });*/
 
 }
 
