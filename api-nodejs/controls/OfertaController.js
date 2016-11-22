@@ -140,7 +140,8 @@ function getOfertasById(req, res) {
 
   banco('OFERTA')
     .where('oftCodigo', '=', oftCodigo)
-    .join('ENDERECO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo')
+    .join('ENDERECO', 'USUARIO', 'OFERTA.endCodigo', '=', 'ENDERECO.endCodigo',
+      'OFERTA.usuCodigo', '=', 'USUARIO.usuCodigo')
     .select('OFERTA.oftCodigo',
       'OFERTA.itmCodigo',
       'OFERTA.usuCodigo',
@@ -157,7 +158,10 @@ function getOfertasById(req, res) {
       'ENDERECO.cidCodigo',
       'ENDERECO.ufCodigo',
       'ENDERECO.endLatitude',
-      'ENDERECO.endLongitude')
+      'ENDERECO.endLongitude',
+      'USUARIO.usuNome',
+      'USUARIO.usuEmail',
+      'USUARIO.usuImagem')
     .then(function(response) {
 
       if (!response[0]) {
@@ -202,11 +206,12 @@ function getOfertasById(req, res) {
         }
       }
 
-		var usuario = {
-	        usuCodigo: response[0]['usuCodigo'],
-			usuNome: 'John Travolta',
-			usuImagem: 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUwNjQ0ODkxN15BMl5BanBnXkFtZTcwMDc5NjQwNw@@._V1_UY317_CR11,0,214,317_AL_.jpg'
-		}
+      var usuario = {
+        usuCodigo: response[0]['usuCodigo'],
+        usuNome: response[0]['usuNome'],
+        usuImagem: response[0]['usuImagem'],
+        usuEmail: response[0]['usuEmail']
+      };
 
       res.status(200).json({
         error: false,
