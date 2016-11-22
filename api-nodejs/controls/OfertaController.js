@@ -137,18 +137,84 @@ function getOfertas(req, res) {
 
 function getOfertasById(req, res) {
   var oftCodigo = req.params.id;
-  knex.raw('SELECT ' +
-      'of.itmCodigo, of.usuCodigo, of.oftDataFinal, of.oftImagem,' +
-      'of.oftQuantidade, of.oftValor, of.oftDataInicial,' +
-      'us.usuNome, us.usuEmail, us.usuImagem,' +
-      'en.endCodigo, en.endCep, en.endLogradouro, en.endBairro, en.endNumero,' +
-      'en.cidCodigo, en.ufCodigo, en.endLatitude, en.endLongitude' +
-      'FROM OFERTA as of,USUARIO as us,ENDERECO as en' +
+  banco.raw('SELECT ' +
+      'of.itmCodigo, of.usuCodigo, of.oftDataFinal, of.oftImagem, ' +
+      'of.oftQuantidade, of.oftValor, of.oftDataInicial, ' +
+      'us.usuNome, us.usuEmail, us.usuImagem, ' +
+      'en.endCodigo, en.endCep, en.endLogradouro, en.endBairro, en.endNumero, ' +
+      'en.cidCodigo, en.ufCodigo, en.endLatitude, en.endLongitude ' +
+      'FROM OFERTA as of, USUARIO as us, ENDERECO as en ' +
       'WHERE of.oftCodigo=? AND of.usuCodigo = us.usuCodigo AND of.endCodigo = en.endCodigo;', [
         oftCodigo
       ])
-    .then(function(resp) {
-      console.log(JSON.stringify(resp));
+    .then(function(response) {
+
+      if (response[0].length == 0) {
+        throw 'Nenhum registro encontrado';
+      }
+      var rd = response[0][0];
+
+      var oferta = {
+        oftCodigo: rd.oftCodigo,
+        itmCodigo: rd.itmCodigo,
+        oftImagem: rd.oftImagem,
+        oftQuantidade: rd.oftQuantidade,
+        oftValor: rd.oftValor,
+        oftDataInicial: rd.oftDataInicial ?
+          rd.oftDataInicial.formatMMDDYYYY() : "",
+        oftDataFinal: rd.oftDataFinal ?
+          rd.oftDataFinal.formatMMDDYYYY() : "",
+        endCodigo: rd.endCodigo,
+        oftDataInicialCru: rd.oftDataInicial,
+        oftDataFinalCru: rd.oftDataFinal
+      };
+
+      //deleta as propriedades nulas
+      for (var k in oferta || oferta[k] == "") {
+        if (oferta[k] == null) {
+          delete oferta[k];
+        }
+      }
+      var endereco = {
+          endLogradouro: rd.endLogradouro,
+          endBairro: rd.endBairro,
+          endNumero: rd.endNumero,
+          endCep: rd.endCep,
+          cidCodigo: rd.cidCodigo,
+          ufCodigo: rd.ufCodigo,
+          endLatitude: rd.endLatitude,
+          endLongitude: rd.endLongitude,
+        }
+        //deleta as propriedades nulas
+      for (var k in endereco) {
+        if (endereco[k] == null || endereco[k] == "") {
+          delete endereco[k];
+        }
+      }
+
+      var usuario = {
+        usuCodigo: rd.usuCodigo,
+        usuNome: rd.usuNome,
+        usuImagem: rd.usuImagem,
+        usuEmail: rd.usuEmail
+      };
+
+      res.status(200).json({
+        error: false,
+        data: {
+          oferta, endereco, usuario
+
+        }
+      });
+    })
+    .catch(function(error) {
+      console.log('Erro no getbyid: ' + error);
+      res.status(500).json({
+        error: true,
+        data: {
+          message: error.message ? error.message : error
+        }
+      });
     });
 
   /*banco('OFERTA')
