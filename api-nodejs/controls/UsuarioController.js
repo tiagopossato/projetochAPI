@@ -1,6 +1,6 @@
 "use strict";
 var usuModel = require('../models/Usuario');
-//var Notificacoes = require('../controls/NotificacoesController');
+var Notificacoes = require('../controls/NotificacoesController');
 var Endereco = require('../controls/EnderecoController');
 const https = require('https');
 
@@ -77,14 +77,17 @@ function getUsuario(req, res, next) {
 
 function newUsuario(req, res, next) {
   usuModel.Usuario.forge({
-      'usuIdGoogle': req.params.usuIdGoogle
+      'usuIdGoogle': req.params.usuIdGoogle,
+      'usuNome': req.params.usuNome,
+      'usuEmail': req.params.usuEmail,
+      'usuImagem': req.params.usuImagem
     })
     .save()
     .then(function(usuario) {
       console.log("\t-> Novo Usuario");
-      // usuario = usuario.toJSON();
-      // Notificacoes.enviaNotificacao(usuario['usuIdGoogle'],
-      //   'Cadastrado com sucesso!');
+      usuario = usuario.toJSON();
+      Notificacoes.enviaNotificacao(usuario['usuIdGoogle'],
+        'Cadastrado com sucesso!');
       res.status(200).json({
         error: false,
         data: {
@@ -136,16 +139,16 @@ function updateUsuario(req, res, next) {
         })
         .save(usuario)
         .then(function(user) {
-			var resposta = user.toJSON();
-			var usuario = {
-				endCodigo: resposta.endCodigo
-			};
-			return res.status(200).json({
-				error: false,
-				data: {
-					usuario
-				}
-			});
+          var resposta = user.toJSON();
+          var usuario = {
+            endCodigo: resposta.endCodigo
+          };
+          return res.status(200).json({
+            error: false,
+            data: {
+              usuario
+            }
+          });
 
         })
         .catch(function(err) {
@@ -208,6 +211,9 @@ function login(req, res, next) {
         if (resposta.statusCode == 200) {
           //console.log('statusCodeGoogle:', resposta.statusCode);
           req.params.usuIdGoogle = gData['sub'];
+          req.params.usuNome = gData['email'];
+          req.params.usuEmail = gData['name'];
+          req.params.usuImagem = gData['picture'];
           newUsuario(req, res, next);
         } else {
           console.log("Falha no get dados: " + resposta.statusCode);
