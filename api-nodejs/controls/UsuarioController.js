@@ -115,7 +115,7 @@ function updateUsuario(req, res, next) {
   var endereco = req.query['endereco'];
   var usuario = req.query['usuario'];
   //console.log("endereco:" + JSON.stringify(endereco));
-  //console.log("usuario:" + usuario);
+  console.log("usuario:" + usuario);
   //caso receber um endereço junto com os dados do usuario
   //altera o endereco e o usuario
   if (endereco) {
@@ -211,8 +211,8 @@ function login(req, res, next) {
         if (resposta.statusCode == 200) {
           //console.log('statusCodeGoogle:', resposta.statusCode);
           req.params.usuIdGoogle = gData['sub'];
-          req.params.usuNome = gData['email'];
-          req.params.usuEmail = gData['name'];
+          req.params.usuNome = gData['name'];
+          req.params.usuEmail = gData['email'];
           req.params.usuImagem = gData['picture'];
           newUsuario(req, res, next);
         } else {
