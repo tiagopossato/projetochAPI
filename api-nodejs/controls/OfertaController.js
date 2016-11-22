@@ -139,9 +139,9 @@ function getOfertasById(req, res) {
   var oftCodigo = req.params.id;
   knex.raw('SELECT ' +
       'of.itmCodigo, of.usuCodigo, of.oftDataFinal, of.oftImagem,' +
-      'of.oftQuantidade, of.oftValor, of.oftDataInicial' +
+      'of.oftQuantidade, of.oftValor, of.oftDataInicial,' +
       'us.usuNome, us.usuEmail, us.usuImagem,' +
-      'en.endCodigo, en.endCep, en.endLogradouro, en.endBairo, en.endNumero' +
+      'en.endCodigo, en.endCep, en.endLogradouro, en.endBairro, en.endNumero,' +
       'en.cidCodigo, en.ufCodigo, en.endLatitude, en.endLongitude' +
       'FROM OFERTA as of,USUARIO as us,ENDERECO as en' +
       'WHERE of.oftCodigo=? AND of.usuCodigo = us.usuCodigo AND of.endCodigo = en.endCodigo;', [
