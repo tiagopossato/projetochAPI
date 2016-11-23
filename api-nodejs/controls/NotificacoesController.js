@@ -74,9 +74,9 @@ function enviaNotificacaoGeral(msg) {
   usuModel.Usuario
     .fetch()
     .then(function(user) {
-        //console.log(user.toJSON());
-        let i = 0;
-        for (; i < user.length; i++) {}
+      //console.log(user.toJSON());
+      let i = 0;
+      for (; i < user.length; i++) {
         usuario = user[i].toJSON();
         var tokenFcm = usuario['usuTokenFcm'];
         if (tokenFcm) {
@@ -93,7 +93,7 @@ function enviaNotificacaoGeral(msg) {
         }
       }
     })
-.catch(function(err) {
-  console.log('enviaNotificacao->Usuario.where:' + err);
-});
+    .catch(function(err) {
+      console.log('enviaNotificacao->Usuario.where:' + err);
+    });
 }
