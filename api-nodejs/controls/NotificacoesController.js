@@ -72,13 +72,13 @@ function enviaNotificacaoGeral(msg) {
   };
   //console.log(mensagem);
   usuModel.Usuario
-    .fetch()
+    .fetchAll()
     .then(function(user) {
-      //console.log(user.toJSON());
+      var usuario = user.toJSON();
       let i = 0;
-      for (; i < user.length; i++) {
-        usuario = user[i].toJSON();
-        var tokenFcm = usuario['usuTokenFcm'];
+      for (; i < usuario.length; i++) {
+        var tokenFcm = usuario[i]['usuTokenFcm'];
+        //console.log(tokenFcm);
         if (tokenFcm) {
           mensagem['to'] = tokenFcm;
           //console.log(mensagem);
