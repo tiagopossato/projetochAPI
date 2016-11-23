@@ -3,8 +3,8 @@ const https = require('https');
 var API_SERVER_KEY = 'AIzaSyBGyQuDbo6cZTS1ZpTVvfKKZlhgfcbddvo';
 
 module.exports = {
-  //login: getUsuarioByGoogleId,
-  enviaNotificacao: enviaNotificacao
+  enviaNotificacao: enviaNotificacao,
+  enviaNotificacaoGeral: enviaNotificacaoGeral
 };
 
 var FCM = require('fcm-push');
@@ -60,5 +60,23 @@ function enviaNotificacao(idGoogle, msg) {
     })
     .catch(function(err) {
       console.log('enviaNotificacao->Usuario.where:' + err);
+    });
+}
+
+function enviaNotificacaoGeral(msg) {
+  var mensagem = {
+    to = 'br.com.projetoch.hortapp',
+      notification: {
+        title: 'Aplicativo HortApp',
+        body: msg
+      }
+  };
+  fcm.send(mensagem)
+    .then(function(response) {
+      console.log("Mensagem enviada");
+    })
+    .catch(function(err) {
+      console.log("Something has gone wrong!");
+      console.error(err);
     });
 }

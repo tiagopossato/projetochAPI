@@ -2,6 +2,7 @@
 let banco = require('../models/banco');
 let Oferta = require('../models/Oferta');
 let Endereco = require('../controls/EnderecoController');
+var Notificacoes = require('../controls/NotificacoesController');
 let strtotime = require('strtotime');
 let formidable = require('formidable');
 let fs = require('fs');
@@ -489,6 +490,8 @@ function salvaOferta(req, res) {
         error: false,
         data: oferta
       });
+      Notificacoes.enviaNotificacaoGeral(
+        "Um novo produto foi adicionado à gôndola!");
     })
     .catch(function(err) {
       console.log('salvaOferta: ' + JSON.stringify(err));
