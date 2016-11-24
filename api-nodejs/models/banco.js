@@ -12,7 +12,8 @@ module.exports = require('knex')({
     user: 'chucrute-testes',
     password: 'chucrute-testes',
     database: 'TESTES-HORTAPP',
-    charset: 'utf8'
+    charset: 'utf8',
+	timezone: 'utc'  //<-here this line was missing
   },
   useNullAsDefault: true,
   pool: {
