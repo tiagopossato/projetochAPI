@@ -99,12 +99,16 @@ function enviaNotificacaoGeral(msg) {
     });
 }
 
-function novaMensagem() {
+function novaMensagem(req, res) {
 
   var usuario = req.query['remetente'];
   var destinatario = req.query['destinatario'];
   var mensagem = req.query['msg'];
 
   enviaNotificacao(destinatario, usuario + " reservou " + mensagem + " itens.");
+
+  res.status(200).json({
+    error: false
+  });
 
 }
