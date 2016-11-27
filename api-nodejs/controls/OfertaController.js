@@ -141,7 +141,7 @@ function getOfertasById(req, res) {
   banco.raw('SELECT ' +
       'of.itmCodigo, of.usuCodigo, of.oftDataFinal, of.oftImagem, ' +
       'of.oftQuantidade, of.oftValor, of.oftDataInicial, ' +
-      'us.usuNome, us.usuEmail, us.usuImagem, ' +
+      'us.usuNome, us.usuIdGoogle, us.usuEmail, us.usuImagem, ' +
       'en.endCodigo, en.endCep, en.endLogradouro, en.endBairro, en.endNumero, ' +
       'en.cidCodigo, en.ufCodigo, en.endLatitude, en.endLongitude ' +
       'FROM OFERTA as of, USUARIO as us, ENDERECO as en ' +
@@ -195,6 +195,7 @@ function getOfertasById(req, res) {
 
       var usuario = {
         usuCodigo: rd.usuCodigo,
+		usuIdGoogle: rd.usuIdGoogle,
         usuNome: rd.usuNome,
         usuImagem: rd.usuImagem,
         usuEmail: rd.usuEmail

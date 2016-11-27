@@ -4,7 +4,8 @@ var API_SERVER_KEY = 'AIzaSyBGyQuDbo6cZTS1ZpTVvfKKZlhgfcbddvo';
 
 module.exports = {
   enviaNotificacao: enviaNotificacao,
-  enviaNotificacaoGeral: enviaNotificacaoGeral
+  enviaNotificacaoGeral: enviaNotificacaoGeral,
+  novaMensagem: novaMensagem
 };
 
 var FCM = require('fcm-push');
@@ -96,4 +97,14 @@ function enviaNotificacaoGeral(msg) {
     .catch(function(err) {
       console.log('enviaNotificacao->Usuario.where:' + err);
     });
+}
+
+function novaMensagem() {
+
+  var usuario = req.query['remetente'];
+  var destinatario = req.query['destinatario'];
+  var mensagem = req.query['msg'];
+
+  enviaNotificacao(destinatario, usuario + " reservou " + mensagem + " itens.");
+
 }

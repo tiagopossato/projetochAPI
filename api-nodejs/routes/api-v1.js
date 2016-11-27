@@ -6,7 +6,7 @@ var upload = multer(); // for parsing multipart/form-data
 // var enderecos = require('../controls/EnderecoController');
 var usuarios = require('../controls/UsuarioController');
 var ofertas = require('../controls/OfertaController');
-
+var notificacoes = require('../controls/NotificacoesController');
 
 var router = express.Router();
 
@@ -31,6 +31,7 @@ router.get('/novaoferta', usuarios.validaToken, ofertas.post);
 router.get('/alteraoferta', usuarios.validaToken, ofertas.put);
 router.post('/recebefoto', usuarios.validaToken, ofertas.recebeFoto);
 
+router.get('/mensagem', usuarios.validaToken, notificacoes.novaMensagem);
 /*CIDADES*/
 // router.get('/cidades', usuarios.validaToken, cidades.get);
 // router.get('/cidades/:id', usuarios.validaToken, cidades.getById);
